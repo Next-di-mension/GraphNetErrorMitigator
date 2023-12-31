@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import itertools
+import argparse
 from qiskit.circuit import QuantumCircuit, Parameter
 from qiskit.providers.fake_provider import FakeMelbourne
 from qiskit_aer.noise import NoiseModel
@@ -15,17 +16,17 @@ from geometry_params import *  # Assuming this is a custom module for your proje
 warnings.filterwarnings('ignore')
 
 # Constants and Globals
-BOND_LENGTH = 3
-NUM_PARAMS = 1
-SEED = 170
-NUM_QUBITS = 8
-MAX_ITER = 2000
-SHOTS = 30000
+# BOND_LENGTH = 3
+# NUM_PARAMS = 1
+# SEED = 170
+# NUM_QUBITS = 8
+# MAX_ITER = 2000
+# SHOTS = 30000
 
 # Create a directory to store results
 os.makedirs(r'src\tmp', exist_ok=True)
 
-def initialize_estimators():
+def initialize_estimators(SEED, SHOTS):
     """Initializes noisy and noiseless quantum estimators."""
     device = FakeMelbourne()
     coupling_map = device.configuration().coupling_map
@@ -84,7 +85,7 @@ def double_excitation_circ(qc,i,j,k,l,theta):
     return qc
 
 
-def gate_count(qc):
+def gate_count(qc, NUM_PARAMS):
     """Counts the number of gates in a quantum circuit."""
     cnots = qc.count_ops()['cx']  # CNOTs
     cx0 = 6*NUM_PARAMS  # CNOTs with control qubit 0
@@ -92,7 +93,7 @@ def gate_count(qc):
     total = sum(qc.count_ops().values())
     return cnots, cx0, total
 
-def create_ansatz(double_exit, parameters):
+def create_ansatz(double_exit, parameters, NUM_QUBITS):
     """Creates a quantum circuit (ansatz) based on given parameters."""
     qc = QuantumCircuit(NUM_QUBITS)
     hartree_fock(qc)
@@ -100,10 +101,25 @@ def create_ansatz(double_exit, parameters):
         double_excitation_circ(qc, double_exit[n][0][0], double_exit[n][0][1], double_exit[n][1][0], double_exit[n][1][1], parameters[n])
     return qc
 
-def main():
-    """Main function to execute the VQE algorithm and save results."""
-    print(f"{BOND_LENGTH} times geometry")
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Quantum VQE Simulation")
+    parser.add_argument('--bond_length', type=int, default=3, help='Bond length')
+    parser.add_argument('--num_params', type=int, default=1, help='Number of parameters')
+    parser.add_argument('--seed', type=int, default=170, help='Random seed')
+    parser.add_argument('--num_qubits', type=int, default=8, help='Number of qubits')
+    parser.add_argument('--max_iter', type=int, default=2000, help='Maximum iterations for optimizer')
+    parser.add_argument('--shots', type=int, default=30000, help='Number of shots for simulation')
+    return parser.parse_args()
 
+def main(args):
+    """Main function to execute the VQE algorithm and save results."""
+    BOND_LENGTH = args.bond_length
+    NUM_PARAMS = args.num_params
+    SEED = args.seed
+    NUM_QUBITS = args.num_qubits
+    MAX_ITER = args.max_iter
+    SHOTS = args.shots
+    print(f"{BOND_LENGTH} times geometry")
     # Initialize quantum operators and energies
     qubit_op = op_3times  # Assuming defined in geometry_params
     nuclear_repulsion_energy = nuc_3times  # Assuming defined in geometry_params
@@ -111,7 +127,7 @@ def main():
     print('Energy Shift: ', nuclear_repulsion_energy)
 
     # Initialize estimators
-    noisy_estimator, noiseless_estimator = initialize_estimators()
+    noisy_estimator, noiseless_estimator = initialize_estimators(SEED=SEED, SHOTS=SHOTS)
 
     # Create list of parameters for the ansatz
     param_list = [Parameter(f'phi{i}') for i in range(NUM_PARAMS)]
@@ -122,8 +138,8 @@ def main():
 
     results = []
     for list_T2 in list_T2_combinations:
-        qc = create_ansatz(list_T2, param_list)
-        gate_counts = gate_count(qc)
+        qc = create_ansatz(list_T2, param_list, NUM_QUBITS)
+        gate_counts = gate_count(qc, NUM_PARAMS)
 
         # Optimization and VQE execution noiseless
         optimizer = COBYLA(maxiter=MAX_ITER)
@@ -147,11 +163,11 @@ def main():
         optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
         results.append((list_T2, optimal_energy_noisy, optimal_energy, cnot_count, cnot_count0, NUM_PARAMS)) # NUM_PARAMS = no. of T2s
 
-
     # Save results to CSV
-    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx', 'Ideal_value', 'sum_cx', 'sum_cx0', 'sum_t2'])
+    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx', 'Ideal_val', 'sum_cx', 'sum_cx0', 'sum_t2'])
 
     EM_data.to_csv(f'src/tmp/approx_{NUM_PARAMS}p_ideal_comb_{BOND_LENGTH}times_new_ansatz.csv', index=False)
 
 if __name__ == '__main__':
-    main()
+    args = parse_arguments()
+    main(args)

@@ -1,29 +1,15 @@
 import pandas as pd
 import torch
 import torch.nn as nn
-from torch_geometric.data import Data, DataLoader
+from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv
 import torch.nn.functional as F
 import torch.optim as optim
 from collections import Counter
 from torch_geometric import loader
 from time import time
-import numpy as np
-from numpy import random
 
-def random_seed(seed_value, use_cuda):
-    np.random.seed(seed_value) # cpu vars
-    torch.manual_seed(seed_value) # cpu  vars
-    random.seed(seed_value) # Python
-    if use_cuda: 
-        torch.cuda.manual_seed(seed_value)
-        torch.cuda.manual_seed_all(seed_value) # gpu vars
-        torch.backends.cudnn.deterministic = True  #needed
-        torch.backends.cudnn.benchmark = False
-
-
-
-df = pd.read_csv(r'src\tmp\approx_1p_ideal_comb_3times_new_ansatz.csv')
+EM_data = pd.read_csv('src/tmp/approx_1p_ideal_comb_3times_new_ansatz.csv')
 
 def ParseOp(string):
     string_list = list(string.strip('()').split("), ("))
