@@ -8,265 +8,210 @@ import torch.optim as optim
 from collections import Counter
 from torch_geometric import loader
 from time import time
+import argparse
+import os
 
-EM_data = pd.read_csv('src/tmp/approx_1p_ideal_comb_3times_new_ansatz.csv')
+# Constants
+NUM_NODES = 8
+NUM_OUTPUT = 1
 
-def ParseOp(string):
-    string_list = list(string.strip('()').split("), ("))
-    # how to remove the extra brackets
-    string_list = list(map(lambda x: x.strip('('), string_list))
-    string_list = list(map(lambda x: x.strip(')'), string_list))
-    string_list = [tuple(map(int, sub.split(', '))) for sub in string_list]
-    return string_list
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Graph Neural Network Training and Evaluation")
+    parser.add_argument(
+        '--num_features', 
+        type=int, 
+        default=4, 
+        help='Number of features'
+    )
+    parser.add_argument(
+        '--batch_size', 
+        type=int, 
+        default=1, 
+        help='Batch size for training'
+    )
+    parser.add_argument(
+        '--train_test_split_ratio', 
+        type=float, 
+        default=0.8, 
+        help='Train/test split ratio'
+    )
+    parser.add_argument(
+        '--learning_rate', 
+        type=float, 
+        default=0.001, 
+        help='Learning rate for optimization'
+    )
+    parser.add_argument(
+        '--weight_decay', 
+        type=float, 
+        default=5e-4, 
+        help='Weight decay rate'
+    )
+    parser.add_argument(
+        '--epochs', 
+        type=int, 
+        default=100, 
+        help='Number of training epochs'
+    )
+    parser.add_argument(
+        '--patience', 
+        type=int, 
+        default=30, 
+        help='Patience for early stopping'
+    )
+    parser.add_argument(
+       '--model_path',
+        type=str,
+        default='src/models/',
+        help='Path to save data'
+    )
+    return parser.parse_args()
 
-# Prepare the graph data
-num_nodes = 8
-num_features = 4
-num_output = 1
-batch_size = 1
+# Functions
+def parse_operator_string(op_string):
 
-def Create_graph_data(index, op_col):
-        edges = []
-        x = torch.eye(num_nodes)
-        op = ParseOp(op_col[index])
-        for i in range(0, len(op)-1, 2):
-            edges.append((op[i][0], op[i+1][0]))
-            edges.append((op[i][1], op[i+1][1]))
-                
-        # Normalize edges to have smaller index first
-        normalized_edges = [tuple(sorted(edge)) for edge in edges]
+    """Parses a string representing operators into a list of tuples."""
 
-        # Count occurrences of each edge
-        edge_counts = Counter(normalized_edges)
+    string_list = [s.strip('()') for s in op_string.split("), (")]
+    return [tuple(map(int, sub.split(', '))) for sub in string_list]
 
-        # Prepare edge_index and edge_weight
-        unique_edges = list(edge_counts.keys())
-        edge_index = torch.tensor(unique_edges, dtype=torch.long).t().contiguous()
-        edge_weight = torch.tensor([edge_counts[edge] for edge in unique_edges], dtype=torch.float)
+def create_graph_data(index, operator_column):
+    """Creates graph data from the operator column for a given index."""
+    edges = []
+    x = torch.eye(NUM_NODES)
+    op = parse_operator_string(operator_column[index])
+    for i in range(0, len(op) - 1, 2):
+        edges.extend([(op[i][0], op[i + 1][0]), (op[i][1], op[i + 1][1])])
 
-        data = Data(x=x, edge_index=edge_index, edge_attr=edge_weight)
-        
-        return data
+    edge_counts = Counter(tuple(sorted(edge)) for edge in edges)
+    edge_index = torch.tensor(list(edge_counts.keys()), dtype=torch.long).t().contiguous()
+    edge_weight = torch.tensor(list(edge_counts.values()), dtype=torch.float)
 
+    return Data(x=x, edge_index=edge_index, edge_attr=edge_weight)
 
-inputs = df[['Noisy_val_approx', 'sum_cx', 'sum_cx0', 'sum_t2']]
-inputs = torch.tensor(inputs.values).reshape(-1, num_features)
-inputs = inputs.type(torch.float32)
-targets = df['Ideal_val']
-print(targets.shape)
-targets = torch.tensor(targets.values).reshape(-1, num_output)
-targets = targets.type(torch.float32)
-Operator_col = df['Operator']
-
-# Create dataloader
-dataset = [(Create_graph_data(i, Operator_col), inputs[i], targets[i]) for i in range(len(Operator_col))]
-train_size = int(0.8 * len(dataset))
-val_size = len(dataset) - train_size
-train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
-train_loader = loader.DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
-val_loader = loader.DataLoader(val_dataset, batch_size=batch_size, shuffle=False)
-
-# data_loader = loader.DataLoader(dataset, batch_size=batch_size, shuffle=True)
-# random_seed(42, False)
-IS_CUDA = torch.cuda.is_available()
-DEVICE = 'cuda:0' if IS_CUDA else 'cpu'
-
-class GNN(torch.nn.Module):
+# Model Classes
+class GNN(nn.Module):
+    """Graph Neural Network model."""
     def __init__(self):
         super(GNN, self).__init__()
-        self.conv1 = GCNConv(8, 64)
-        self.conv2 = GCNConv(64, 1) 
-
+        self.conv1 = GCNConv(NUM_NODES, 64)
+        self.conv2 = GCNConv(64, 1)
 
     def forward(self, x, edge_index, edge_weight):
-        x = self.conv1(x, edge_index, edge_weight)
-        x = F.relu(x)
-        # x = F.dropout(x, p=0.01)
-        x = self.conv2(x, edge_index, edge_weight)
-        return x
+        x = F.relu(self.conv1(x, edge_index, edge_weight))
+        return self.conv2(x, edge_index, edge_weight)
 
-class FCNN(nn.Module):
-    def __init__(self):
-        super(FCNN, self).__init__()
-        self.fc1 = nn.Linear(num_features , 64)  
-        self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, num_features)  
-    
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        # x = F.dropout(x, p=0.02)
-        x = F.relu(self.fc2(x))
-        # x = F.dropout(x, p=0.02)
-        x = self.fc3(x)
-        return x
-    
 class CombinedModel(nn.Module):
-    def __init__(self):
+    """Combined Graph and Fully Connected Neural Network model."""
+    def __init__(self, NUM_FEATURES):
         super(CombinedModel, self).__init__()
         self.gnn = GNN()
-        # self.regressor = FCNN()
-        self.fc1 = nn.Linear(num_nodes + num_features, 64)
+        self.fc1 = nn.Linear(NUM_NODES + NUM_FEATURES, 64)
         self.fc2 = nn.Linear(64, 64)
         self.fc3 = nn.Linear(64, 1)
 
-
     def forward(self, x, edge_index, edge_weight, noisy_value):
-        graph_out = self.gnn(x, edge_index, edge_weight)
-        graph_out = graph_out.reshape(1, -1)
-        
-        # reg_out = self.regressor(noisy_value)
-        # reg_out = torch.tensor(reg_out.detach().numpy()[0])
-        
+        graph_out = self.gnn(x, edge_index, edge_weight).reshape(1, -1)
+        noisy_input = noisy_value.detach().numpy()[0]
+        combined = torch.cat((graph_out, torch.tensor(noisy_input).unsqueeze(0)), dim=1)
+        combined = F.relu(self.fc1(combined))
+        combined = F.relu(self.fc2(combined))
+        return self.fc3(combined)
 
-        noisy_input = noisy_value
-        noisy_input = torch.tensor(noisy_input.detach().numpy()[0])
-        combined = torch.cat((graph_out, noisy_input.unsqueeze(0)), dim=1)
-        combined = self.fc1(combined)
-        combined = F.relu(combined)
-        # combined = F.dropout(combined, p=0.02)
-        combined = self.fc2(combined)
-        combined = F.relu(combined)
-        # combined = F.dropout(combined, p=0.02)
-        combined = self.fc3(combined)
-        return combined
+def train_and_evaluate(model, train_loader, val_loader, optimizer, EPOCHS):
+    """Train and evaluate the model."""
+    best_loss = float('inf')
+    epochs_since_improvement = 0
 
-# Initialize the model
-model = CombinedModel()
-
-# Define the optimizer
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=5e-4)
-
-
-
-# Early stopping parameters
-patience = 30 # How many epochs to wait after last time validation loss improved
-best_loss = float('inf')
-epochs_since_improvement = 0
-
-# Training loop
-
-for i in range(10):
-    time0 = time()
-    print('Iteration', i)
-    for epoch in range(100):
-        model = model.to(DEVICE)
+    for epoch in range(EPOCHS):
+        # Training Phase
         model.train()
-        total_loss = 0
         for batch in train_loader:
             optimizer.zero_grad()
-            
-            target = torch.tensor(batch[2].detach().numpy()[0])
-            target = target.reshape(1, -1)
-            
-            output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1]) 
-            # l1_lambda = 0.001  # The regularization parameter
-            # l1_norm = sum(p.abs().sum() for p in model.parameters())
-            loss = F.mse_loss(output, target) +1 #+ l1_lambda * l1_norm
-            
+            target = batch[2].reshape(1, -1)
+            output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1])
+            loss = F.mse_loss(output, target)
             loss.backward()
             optimizer.step()
-            total_loss += loss.item()
-        # print(f'Epoch {epoch+1}, Average Loss: {total_loss / len(train_loader)}')
 
-        # Validation phase
+        # Validation Phase
         model.eval()
         val_loss = 0
         with torch.no_grad():
             for batch in val_loader:
-            
-                target = torch.tensor(batch[2].detach().numpy()[0])
-                target = target.reshape(1, -1)
-                
-                output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1]) 
-                # print('predicted_value', output, 'true_value', target)
-                # l1_lambda = 0.0001  # The regularization parameter
-                # l1_norm = sum(p.abs().sum() for p in model.parameters())
-                loss = F.mse_loss(output, target) #+ l1_lambda * l1_norm
-        
-                val_loss += loss.item()
+                target = batch[2].reshape(1, -1)
+                output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1])
+                val_loss += F.mse_loss(output, target).item()
+            val_loss /= len(val_loader)
 
-                val_loss /= len(val_loader)
-            # print(f'Epoch {epoch+1}, Validation Loss: {val_loss}')
-        model.eval()
-        # op_string = '(((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((1, 5), (2, 6)), ((0, 5), (3, 6)))'
-        op_string = '(((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((4, 5), (6, 7)), ((1, 5), (2, 6)), ((0, 5), (3, 6)))'
 
-        df_test = pd.DataFrame({
-            'Operator': op_string,
-            'Input': [-1.865049831834082]
-        })
+def test_model(model, test_data, circ_features):
 
-        op_col = df_test['Operator']
-        noisy_val = torch.tensor([[-1.3067543819581207, 80/224,  60/224, 1]])
-        test_graph = Create_graph_data(0, op_col)
-        
-
-        with torch.no_grad():
-            graph_output = model(test_graph.x, test_graph.edge_index, test_graph.edge_attr, noisy_val)
-            print("Output of the GNN for a test graph:", graph_output)
-        # Check for improvement
-        # make directory
-        
-        # model_path = r'models\2times\early_stopping\best_model_2times.pt'
-        if val_loss < best_loss:
-            best_loss = val_loss
-            epochs_since_improvement = 0
-            # Save the model if you want
-            # torch.save(model.state_dict(), model_path)
-        else:
-            epochs_since_improvement += 1
-
-    # if epochs_since_improvement >= patience:
-    #     print(f"Early stopping triggered after {epoch+1} epochs")
-    #     break
-
-    # Test the model on final ansatz
+    """Tests the model on new data."""
     model.eval()
-    # op_string = '(((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((1, 5), (2, 6)), ((0, 5), (3, 6)))'
+    with torch.no_grad():
+        graph_output = model(test_data.x, test_data.edge_index, test_data.edge_attr, circ_features)
+        print("Output of the GNN for a test graph:", graph_output)
+
+def save_model(model, filename):
+    """Saves the model state."""
+    torch.save(model.state_dict(), filename)
+
+# Main execution
+def main(args):
+
+    NUM_FEATURES = args.num_features
+    BATCH_SIZE = args.batch_size
+    TRAIN_TEST_SPLIT_RATIO = args.train_test_split_ratio
+    LEARNING_RATE = args.learning_rate
+    WEIGHT_DECAY = args.weight_decay
+    EPOCHS = args.epochs
+    model_path = args.model_path
+
+
+    # Load and preprocess data
+    df = pd.read_csv('src/tmp/3times_noise_data.csv')
+    inputs = torch.tensor(df[['Noisy_val_approx', 'sum_cx', 'sum_cx0', 'sum_t2']].values, dtype=torch.float32)
+    targets = torch.tensor(df['Ideal_val'].values.reshape(-1, 1), dtype=torch.float32)
+    operator_col = df['Operator']
+
+    # Prepare dataset
+    dataset = [(create_graph_data(i, operator_col), inputs[i], targets[i]) for i in range(len(operator_col))]
+    train_size = int(TRAIN_TEST_SPLIT_RATIO * len(dataset))
+    val_size = len(dataset) - train_size
+    train_dataset, val_dataset = torch.utils.data.random_split(dataset, [train_size, val_size])
+    train_loader = loader.DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=False)
+    val_loader = loader.DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
+
+    # Model setup
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    model = CombinedModel(NUM_FEATURES=NUM_FEATURES).to(device)
+    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY)
+
+    # Training and Evaluation
+    train_and_evaluate(model, train_loader, val_loader, optimizer, EPOCHS)
+
+    # Test the model on new data
     op_string = '(((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((4, 5), (6, 7)), ((1, 5), (2, 6)), ((0, 5), (3, 6)))'
 
-    df_test = pd.DataFrame({
+    test_data = pd.DataFrame({
         'Operator': op_string,
         'Input': [-1.865049831834082]
     })
 
-
-    op_col = df_test['Operator']
+    op_col = test_data['Operator']
     noisy_val = torch.tensor([[-1.3067543819581207, 80/224,  60/224, 1]])
-    test_graph = Create_graph_data(0, op_col)
-    print(test_graph.edge_index)
-    print(test_graph.edge_attr)
-    # print('loss', loss_list) 
+    test_graph_data = create_graph_data(0, op_col)  # Example test data
+    test_model(model, test_graph_data, noisy_val)
 
-    # m = CombinedModel()
-    # m = m.to(DEVICE)
-    # m.eval()
-    # m.load_state_dict(torch.load(model_path))
+    # Save the model
+    model_save_path = model_path + 'gnn_model.pt'
+    save_model(model, model_save_path)
+    print(f"Model saved at {model_save_path}")
+    
 
-    with torch.no_grad():
-        graph_output = model(test_graph.x, test_graph.edge_index, test_graph.edge_attr, noisy_val)
-        print("Output of the GNN for a test graph:", graph_output)
-    print('time taken', time() - time0)
-
-# save model 
-# g = graph_output.detach().numpy()
-# g  = str(g)
-# # remove element from string
-# g = g.strip('[')
-# g = g.strip(']')
-# # remove element from string
-# g = g.replace('-', '')
-# g = g.replace('.', '')
-
-# model_path = r'models\2times\model_2times_approx_noisy_wo_s_new_ansatz_' + g + '.pt'
-# torch.save(model.state_dict(), model_path)
-
-# load model
-# m = CombinedModel()
-# m = m.to(DEVICE)
-# m.eval()
-# m.load_state_dict(torch.load(model_path))
-
-# with torch.no_grad():
-#     graph_output = m(test_graph.x, test_graph.edge_index, test_graph.edge_attr, noisy_val)
-#     print("Output of the GNN for a test graph:", graph_output)
+if __name__ == '__main__':
+    start_time = time()
+    args = parse_arguments()
+    main(args)
+    print(f'Total time taken: {time() - start_time} seconds')
