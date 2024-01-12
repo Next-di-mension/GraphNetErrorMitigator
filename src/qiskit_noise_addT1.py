@@ -155,7 +155,7 @@ def gate_count(qc, num_params):
                         basis_gates=basis_gates)
         
     for i in range(10):    
-        tr_qc = transpile(qc, backend=backend, optimization_level=3,)
+        tr_qc = transpile(qc, backend=backend, coupling_map=coupling_map,optimization_level=3,)
         # print(tr_qc)
         cnot_count = tr_qc.count_ops()['cx']  # CNOTs
         
