@@ -2,7 +2,7 @@
 from qiskit import QuantumCircuit
 from qiskit.circuit import QuantumCircuit, Parameter
 from qiskit.providers.fake_provider import *
-from qiskit.providers.fake_provider import FakeMelbourne
+from qiskit.providers.fake_provider import FakeMelbourne, FakeGuadalupe
 from qiskit_aer.noise import NoiseModel
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_aer.noise import NoiseModel
@@ -13,16 +13,23 @@ import warnings
 from geometry_params import *
 
 warnings.filterwarnings('ignore')
-
-qubit_op = op_3times
-nuclear_repulsion_energy = nuc_3times
+molecule = 'BH'
+bond_length = 3 
+key = molecule + '_'+ str(bond_length) + 'times'
+ansatz = Ansatz[key]
+print(f"{bond_length} times geometry")
+results = []
+    
+# Initialize quantum operators and energies
+qubit_op = Observable[key]  
+nuclear_repulsion_energy = Energy_shift[key]  
 shift = nuclear_repulsion_energy
 
 print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
 print('Energy Shift: ',shift)
 
 
-device = FakeMelbourne()
+device = FakeGuadalupe()
 coupling_map = device.configuration().coupling_map
 noise_model = NoiseModel.from_backend(device)
 seed = 170
@@ -48,7 +55,7 @@ noiseless_estimator = AerEstimator(
     approximation = True
 )
 
-num_params = 10
+num_params = 11
 param_list = list()
 
 for i in range(num_params):
@@ -59,8 +66,8 @@ for i in range(num_params):
 def Hartree_Fock(qc):
     qc.x(0)
     qc.x(1)
-    qc.x(4)
     qc.x(5)
+    qc.x(6)
     return qc
 
 def first_excitation_circ(qc,i,k,theta):
@@ -103,23 +110,13 @@ def double_excitation_circ(qc,i,j,k,l,theta):
 
     return qc
 
-
-final_ansatz = [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5),(3, 7)), 
-                ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
-                ((1, 5), (2, 6)), ((0, 6), (3, 7)), ((4, 2), (7, 3)), ((0, 4), (3, 5)),
-                ((4, 0), (7, 1)), ((0,5),(3,6))]
-
 # list_T1=[((0), (2)), ((1), (3)), ((4), (6)), ((5), (7))]
 
-final_ansatz_wo_s = Ansatz_3times
-
-# final_ansatz_wo_s = [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), ((0, 4), (2, 6))]
-                    #  ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((4, 5), (6, 7)), 
-                    #  ((1, 5), (2, 6)),((0, 5), (3, 6))]
+final_ansatz_wo_s = ansatz
 
 list_T2 = final_ansatz_wo_s
 T2_angle = param_list
-num_qubits = 8
+num_qubits = 10
 
 qc = QuantumCircuit(num_qubits)
 Hartree_Fock(qc)
@@ -135,7 +132,7 @@ def store_intermediate_result(eval_count, parameters, mean, std):
 
 
 
-optimizer=COBYLA(maxiter=2000)
+optimizer=COBYLA(maxiter=20000)
 
 avg_list = list()
 opt_energy_list = list()
