@@ -26,7 +26,7 @@ def parse_arguments():
     parser.add_argument(
         '--bond_length', 
         type=int, 
-        default=225, 
+        default=25, 
         help='Bond length'
     )
     parser.add_argument(
@@ -259,7 +259,7 @@ def main(args):
 
     # Save results to CSV
     path = data_path + str(bond_length) + 'times_noise_test_data_' + device_str + '_' + molecule + '.csv'
-    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx', 'Ideal_val', 'two_qc_ratio', 'single_qc_ratio', 't2_ratio', 'cnot_con'])
+    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx', 'Ideal_val', 'two_qc_ratio', 'single_qc_ratio', 'param_ratio', 'cnot_con'])
     EM_data.to_csv(path, mode='a', index=False)
 
 if __name__ == '__main__':
