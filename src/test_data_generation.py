@@ -227,8 +227,8 @@ def main(args):
         energy_list.append(mean+nuclear_repulsion_energy)
         print('Energy',mean+nuclear_repulsion_energy)
     # Create list of parameters for the ansatz
-    param_list = [Parameter(f'phi{i}') for i in range(num_params)]
-    
+    param_list = [Parameter(f'phi{i}') for i in range(11, num_params+11)]
+    print(param_list)
     
 
     qc = create_ansatz(ansatz, param_list)
@@ -247,7 +247,7 @@ def main(args):
     optimizer_noisy = COBYLA(maxiter=max_iter)
     vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
     vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
-
+    print(vqe_result)
     
     two_qc = gate_counts[0]/gate_counts[2]
     single_qc = gate_counts[1]/gate_counts[2]
