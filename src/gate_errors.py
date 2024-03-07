@@ -2,19 +2,20 @@
 from qiskit.providers.fake_provider import FakeManila, FakeMelbourne, FakeGuadalupe
 import numpy as np 
 
-NUM_NODES = 14
+NUM_NODES = 16
 
 def gate_error_matrix(backend_fake):
     m = np.zeros((NUM_NODES,NUM_NODES))
     j = -1
     for i in range(len(backend_fake.properties().to_dict()['gates'])):
-
+    
         if backend_fake.properties().to_dict()['gates'][i]['gate'] == 'x':
             j = j + 1
-            m[j,j] = backend_fake.properties().to_dict()['gates'][i]['parameters'][0]['value']
+            m[j,j] = m[j,j] + backend_fake.properties().to_dict()['gates'][i]['parameters'][0]['value']
+            # print(m[j,j])
             if j == NUM_NODES-1:
                 break
-
+    # print(m)
     j = -1
     for i in range(len(backend_fake.properties().to_dict()['gates'])):
         if backend_fake.properties().to_dict()['gates'][i]['gate'] == 'id':
@@ -22,6 +23,7 @@ def gate_error_matrix(backend_fake):
             m[j,j] = m[j,j] +  backend_fake.properties().to_dict()['gates'][i]['parameters'][0]['value']
             if j == NUM_NODES-1:
                 break
+    # print(m)
     j = -1
     for i in range(len(backend_fake.properties().to_dict()['gates'])):
         if backend_fake.properties().to_dict()['gates'][i]['gate'] == 'sx':
@@ -29,7 +31,18 @@ def gate_error_matrix(backend_fake):
             m[j,j] = m[j,j] +  backend_fake.properties().to_dict()['gates'][i]['parameters'][0]['value']
             if j == NUM_NODES-1:
                 break
+    # print(m)
+    j = -1
+    for i in range(len(backend_fake.properties().to_dict()['gates'])):
+
+        if backend_fake.properties().to_dict()['gates'][i]['gate'] == 'rz':
+            j = j + 1
+            m[j,j] = m[j,j] + backend_fake.properties().to_dict()['gates'][i]['parameters'][0]['value']
+            if j == NUM_NODES-1:
+                break
+    # print(m)
     return m
+    
 l = 0   
 k = 0
 # two qubit gate error matrix
@@ -46,12 +59,15 @@ def two_qubit_gate_error_matrix(backend_fake):
 
     return n
 
-# backend_fake = FakeGuadalupe()
-backend_fake = FakeMelbourne()
-
+backend_fake = FakeGuadalupe()
+# backend_fake = FakeMelbourne()
+# number of qubits 
+# print(backend_fake.configuration().to_dict()['n_qubits'])
+# native gate set
+# print(backend_fake.properties().to_dict()['gates'][0]['parameters'][0]['value'])
 one_qubit_mat= gate_error_matrix(backend_fake)
 two_qubit_mat = two_qubit_gate_error_matrix(backend_fake)
 node_embd_mat = one_qubit_mat + two_qubit_mat
 
-
-
+# print(node_embd_mat)
+# print(one_qubit_mat)
