@@ -11,7 +11,7 @@ patience: 30
 model_path: src/models/
 bond_length: 175
 beta: 0.007 
-data_path: src/tmp/
+data_path: src/data/
 molecule: BH
 machine: Guadalupe
 

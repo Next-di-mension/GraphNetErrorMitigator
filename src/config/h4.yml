@@ -4,5 +4,5 @@ molecule: H4
 num_params: 4
 max_iter: 2000
 shots: 30000
-data_path: 'src/tmp/'
+data_path: 'src/data/'
 device_str: 'Melbourne'
