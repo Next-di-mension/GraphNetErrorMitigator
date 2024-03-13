@@ -10,6 +10,9 @@ Despite significant efforts, the realization of the variational quantum eigensol
 ![Screenshot 2024-02-15 114119](https://github.com/Next-di-mension/GraphNetErrorMitigator/assets/98448938/32bb08cf-e866-49a3-9104-fb405187e34e)
 
 
+## Installation
+This repository contains a code for implementing the GNN-Regressor EM technique. The code is written in Python 3.8.10 The code is tested on Ubuntu 18.04.5 LTS.
+
 # Cloning and handling dependencies 
 Clone the repo:
 ```
