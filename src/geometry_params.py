@@ -1,34 +1,170 @@
 from qiskit.quantum_info import SparsePauliOp
 # All the final ansatzs and all geometries are stored here
 
-Ansatz = {'H4_1times':  [((0, 4), (2, 6)), ((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), 
+Ansatz = {'H4_1times_Melbourne':  [((0, 4), (2, 6)), ((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), 
                  ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
-                 ((1, 5), (2, 6)), ((0, 5), (3, 6))],
+                 ((1, 5), (2, 6)), ((1, 5), (3, 6)), ((0, 5), (2, 6)), ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
 
-          'H4_2times':  [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)),
+        'H4_1times_Rueschlikon':  [((0, 4), (2, 6)), ((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), 
+        ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
+        ((1, 5), (2, 6)), ((1, 5), (3, 6)), ((0, 5), (2, 6)), ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_15times_Melbourne': [((1, 4), (3, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                           ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
+                           ((1, 5), (2, 6)), ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))], 
+
+            'H4_125times_Melbourne': [((0, 4), (2, 6)), ((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), 
+                            ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
+                            ((1, 5), (2, 6)), ((1, 5), (3, 6)), ((0, 5), (2, 6)), ((0, 5), (3, 6)),
+                            ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],  
+
+          'H4_175times_Melbourne': [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                          ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((1, 5), (2, 6)), 
+                          ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+          'H4_2times_Melbourne':  [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)),
               ((0, 4), (3, 7)), ((1, 4), (2, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
               ((1, 5), (2, 6)), ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
 
-          'H4_25times': [((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), 
-              ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
-              ((1, 5), (2, 6)), ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
 
-          'H4_3times': [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), 
+          'H4_25times_Melbourne': [((1, 4), (3, 6)), ((0, 5), (2, 7)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), 
+              ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((1, 5), (2, 6)), 
+              ((0, 5), (3, 6)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+          'H4_3times_Melbourne': [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), ((0, 4), (2, 6)), 
               ((1, 4), (2, 7)), ((0, 4), (3, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), 
               ((1, 5), (2, 6)), ((0, 5), (3, 6))], 
 
-          'H4_225times': [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), ((1, 4), (2, 7)),
+          'H4_225times_Melbourne': [((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), ((1, 4), (2, 7)),
               ((0, 4), (3, 7)), ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((1, 5), (2, 6)), ((0, 5), (3, 6)), 
               ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))], 
 
-          'BH_3times': [((1, 6), (2, 7)), ((0, 5), (3, 8)), ((0, 5), (2, 7)), ((1, 6), (4, 9)), 
+              'H4_2times_level0': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), 
+                                   ((1, 5), (3, 7)), ((0, 4), (3, 7)), ((0, 5), (3, 6)), ((1, 4), (2, 7)), 
+                                   ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+           'H4_2times_level1': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)),
+                                ((1, 4), (2, 7)),  ((1, 5), (3, 7)), ((0, 5), (3, 6)), ((0, 4), (3, 7)), 
+                                ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_2times_level3': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), 
+                                 ((1, 5), (3, 7)), ((0, 5), (3, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), 
+                                 ((0, 1), (2, 3)), ((4, 5), (6, 7)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_2times_level4':[((1, 5), (2, 6)), ((1, 4), (3, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), 
+                                ((1, 5), (3, 7)), ((1, 4), (2, 7)), ((0, 5), (3, 6)), ((0, 4), (3, 7)), 
+                                ((0, 1), (2, 3)), ((4, 5), (6, 7)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_2times_level5':  [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((0, 4), (2, 6)), 
+                                  ((1, 5), (3, 7)), ((1, 4), (2, 7)), ((0, 5), (3, 6)), ((0, 4), (3, 7)), 
+                                  ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+   
+
+          'BH_3times_Melbourne': [((1, 6), (2, 7)), ((0, 5), (3, 8)), ((0, 5), (2, 7)), ((1, 6), (4, 9)), 
               ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((0, 6), (4, 9)), ((1, 5), (3, 8)), 
-              ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((0, 5), (4, 9))]
+              ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((0, 5), (4, 9))],
+
+            'BH_125times_Melbourne': [((1, 6), (2, 7)), ((1, 6), (4, 9)), ((1, 5), (2, 7)), ((0, 6), (2, 7)), 
+                                      ((1, 5), (3, 8)), ((0, 5), (2, 7)), ((0, 5), (3, 8)), ((0, 6), (4, 9)), 
+                                      ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                    ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)), ((6, 0), (9, 0))],
+
+
+            'BH_15times_Melbourne': [((1, 6), (4, 9)), ((1, 6), (2, 7)), ((0, 5), (2, 7)), ((0, 5), (3, 8)), 
+                                     ((0, 6), (4, 9)), ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((1, 5), (3, 8)), 
+                                     ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                    ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_175times_Melbourne': [((1, 6), (4, 9)), ((0, 5), (2, 7)), ((0, 5), (3, 8)), ((0, 6), (4, 9)), ((1, 6), (2, 7)), 
+                                      ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((1, 5), (3, 8)), ((1, 6), (3, 8)), ((0, 6), (3, 8)), 
+                                      ((1, 5), (4, 9)), ((0, 5), (4, 9)), ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_2times_Melbourne': [((1, 6), (4, 9)), ((0, 5), (2, 7)), ((0, 5), (3, 8)), ((0, 6), (4, 9)), 
+                                    ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((1, 5), (3, 8)), ((1, 6), (2, 7)), 
+                                    ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                    ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_225times_Melbourne': [((1, 6), (4, 9)), ((0, 5), (2, 7)), ((0, 5), (3, 8)), ((0, 6), (4, 9)), 
+                                      ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((1, 5), (3, 8)), ((1, 6), (2, 7)), 
+                                      ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                        ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)), ((6, 0), (9, 0))],
+            
+            'BH_25times_Melbourne': [((1, 6), (2, 7)), ((0, 5), (3, 8)), ((0, 5), (2, 7)), ((0, 6), (2, 7)), 
+                                     ((1, 5), (2, 7)), ((0, 6), (4, 9)), ((1, 5), (3, 8)), ((1, 6), (4, 9)),
+                                     ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                     ((0, 0), (2, 0)), ((5, 0), (7, 0)), ((1, 0), (2, 0)),((6, 0), (7, 0))],
+
+            'BH_275times_Melbourne': [((1, 6), (2, 7)), ((0, 5), (3, 8)), ((0, 5), (2, 7)), ((0, 6), (2, 7)), 
+                                      ((1, 5), (2, 7)), ((1, 6), (4, 9)), ((0, 6), (4, 9)), ((1, 5), (3, 8)), 
+                                      ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((1, 5), (4, 9)), ((0, 5), (4, 9)),
+                                      ((0, 0), (2, 0)), ((5, 0), (7, 0)), ((1, 0), (2, 0)), ((6, 0), (7, 0))],
+
+            'BH_3times_Melbourne': [((1, 6), (2, 7)), ((0, 5), (3, 8)), ((0, 5), (2, 7)), ((1, 6), (4, 9)), 
+                                    ((0, 6), (2, 7)), ((1, 5), (2, 7)), ((0, 6), (4, 9)), ((1, 5), (3, 8)), 
+                                    ((0, 1), (2, 3)), ((1, 6), (3, 8)), ((0, 6), (3, 8)), ((0, 5), (4, 9)),
+                                    ((0, 0), (2, 0)), ((5, 0), (7, 0)), ((1, 0), (2, 0)), ((6, 0), (7, 0))],
+
+            'H4_1times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                                    ((0, 5), (3, 6)), ((1, 4), (3, 6)), ((4, 5), (6, 7)), ((1, 4), (2, 7)), 
+                                    ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), ((1, 0), (3, 0)), 
+                                    ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_125times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                                      ((1, 4), (3, 6)), ((0, 5), (3, 6)), ((4, 5), (6, 7)), ((1, 4), (2, 7)), 
+                                      ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_175times_Guadalupe':[((1, 5), (2, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                                     ((1, 4), (3, 6)), ((0, 5), (3, 6)), ((4, 5), (6, 7)), ((1, 4), (2, 7)), 
+                                     ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_15times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((0, 4), (2, 6)), ((1, 5), (3, 7)), 
+                                     ((1, 4), (3, 6)), ((0, 5), (3, 6)), ((4, 5), (6, 7)), ((1, 4), (2, 7)), 
+                                     ((0, 4), (3, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_2times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), 
+                                      ((0, 4), (2, 6)), ((0, 5), (3, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), 
+                                      ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_225times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), 
+                                      ((0, 4), (2, 6)), ((0, 5), (3, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), 
+                                      ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'H4_25times_Guadalupe': [((1, 5), (2, 6)), ((0, 5), (2, 7)), ((1, 4), (3, 6)), ((1, 5), (3, 7)), 
+                                     ((0, 4), (2, 6)), ((0, 5), (3, 6)), ((1, 4), (2, 7)), ((0, 4), (3, 7)), 
+                                     ((4, 5), (6, 7)), ((0, 1), (2, 3)), ((0, 0), (2, 0)), 
+                                      ((1, 0), (3, 0)), ((4, 0), (6, 0)), ((5, 0), (7, 0))],
+
+            'BH_2times_Guadalupe': [((1, 6), (4, 9)), ((0, 5), (2, 7)), ((0, 5), (4, 9)), ((1, 5), (4, 9)), 
+                                    ((0, 6), (4, 9)), ((1, 5), (2, 7)), ((0, 6), (3, 8)), ((1, 6), (3, 8)), 
+                                    ((1, 6), (2, 7)), ((0, 6), (2, 7)), ((0, 5), (3, 8)), ((1, 5), (3, 8)),
+                                    ((0, 0), (4, 0)), ((5, 0) , (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_15times_Guadalupe': [((1, 6), (4, 9)), ((0, 5), (4, 9)), ((1, 6), (3, 8)), ((0, 5), (2, 7)), 
+                                     ((1, 5), (2, 7)), ((1, 5), (4, 9)), ((0, 6), (4, 9)), ((0, 6), (3, 8)), 
+                                     ((1, 6), (2, 7)), ((0, 6), (2, 7)), ((1, 5), (3, 8)), ((0, 5), (3, 8)),
+                                     ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_125times_Guadalupe': [((1, 6), (3, 8)), ((0, 5), (4, 9)), ((1, 5), (2, 7)), ((1, 6), (4, 9)), 
+                                      ((1, 5), (4, 9)), ((0, 5), (2, 7)), ((0, 6), (4, 9)), ((0, 6), (3, 8)), 
+                                      ((1, 6), (2, 7)), ((0, 6), (2, 7)), ((1, 5), (3, 8)), ((0, 5), (3, 8)),
+                                      ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))],
+
+            'BH_175times_Guadalupe': [((1, 6), (4, 9)), ((0, 5), (2, 7)), ((0, 5), (4, 9)), ((1, 5), (4, 9)), 
+                                      ((0, 6), (4, 9)), ((1, 5), (2, 7)), ((1, 6), (3, 8)), ((0, 6), (3, 8)), 
+                                      ((1, 6), (2, 7)), ((0, 6), (2, 7)), ((1, 5), (3, 8)), ((0, 5), (3, 8)),
+                                      ((0, 0), (4, 0)), ((5, 0), (9, 0)), ((1, 0), (4, 0)),((6, 0), (9, 0))]
+
+
           }
 
 
 
-Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
+Observable = {'H4_1times_Rueschlikon':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
               coeffs=[-2.62457906e+00+0.j,  1.81364852e-01+0.j,  5.56212564e-03+0.j,
   5.56212564e-03+0.j,  8.79264473e-02+0.j,  1.72665507e-02+0.j,
   1.72665507e-02+0.j, -7.90440925e-02+0.j, -3.34612131e-01+0.j,
@@ -92,7 +228,7 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
   7.76203708e-02+0.j,  8.98249924e-02+0.j, -2.55452415e-02+0.j,
  -2.55452415e-02+0.j,  7.94384870e-02+0.j]),
 
-          'H4_2times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
+          'H4_2times_Melbourne':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
               coeffs=[-2.20198131+0.j,  0.0816197 +0.j,  0.00527194+0.j,  0.00527194+0.j,
   0.05634048+0.j,  0.00653475+0.j,  0.00653475+0.j,  0.02007839+0.j,
  -0.0169454 +0.j,  0.0816197 +0.j,  0.00527194+0.j,  0.00527194+0.j,
@@ -141,7 +277,7 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
   0.04735193+0.j,  0.04960991+0.j, -0.01378606+0.j, -0.01378606+0.j,
   0.03996644+0.j]),
 
-          'H4_25times': SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
+          'H4_25times_Melbourne': SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
               coeffs=[-2.00215707+0.j,  0.05970208+0.j,  0.00353086+0.j,  0.00353086+0.j,
   0.04729201+0.j, -0.0038791 +0.j, -0.0038791 +0.j,  0.03145981+0.j,
   0.01657801+0.j,  0.05970208+0.j,  0.00353086+0.j,  0.00353086+0.j,
@@ -190,7 +326,7 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
   0.03978739+0.j,  0.03978798+0.j,  0.01058303+0.j,  0.01058303+0.j,
   0.03147209+0.j]),
 
-  'H4_225times' : SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
+  'H4_225times_Melbourne' : SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
               coeffs=[-2.09485267+0.j,  0.06904949+0.j,  0.00440586+0.j,  0.00440586+0.j,
   0.05112261+0.j,  0.00508408+0.j,  0.00508408+0.j,  0.02692406+0.j,
   0.00344548+0.j,  0.06904949+0.j,  0.00440586+0.j,  0.00440586+0.j,
@@ -239,7 +375,7 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
   0.04318584+0.j,  0.04419558+0.j, -0.01203955+0.j, -0.01203955+0.j,
   0.03523757+0.j]),
 
-          'H4_3times': SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
+          'H4_3times_Melbourne': SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', 'IIIIIXZX', 'IIIIIIZI', 'IIIIYZYI', 'IIIIXZXI', 'IIIIIZII', 'IIIIZIII', 'IIIZIIII', 'IYZYIIII', 'IXZXIIII', 'IIZIIIII', 'YZYIIIII', 'XZXIIIII', 'IZIIIIII', 'ZIIIIIII', 'IIIIIIZZ', 'IIIIYZYZ', 'IIIIXZXZ', 'IIIIIZIZ', 'IIIIZIIZ', 'IIIZIIIZ', 'IYZYIIIZ', 'IXZXIIIZ', 'IIZIIIIZ', 'YZYIIIIZ', 'XZXIIIIZ', 'IZIIIIIZ', 'ZIIIIIIZ', 'IIIIIYIY', 'IIIIIXIX', 'IIIIYYYY', 'IIIIXXYY', 'IIIIYXXY', 'IIIIXYYX', 'IIIIYYXX', 'IIIIXXXX', 'IIYYIIYY', 'IIXXIIYY', 'IIYYIIXX', 'IIXXIIXX', 'YZZYIIYY', 'XZZXIIYY', 'YZZYIIXX', 'XZZXIIXX', 'IYYIIIYY', 'IXXIIIYY', 'IYYIIIXX', 'IXXIIIXX', 'YYIIIIYY', 'XXIIIIYY', 'YYIIIIXX', 'XXIIIIXX', 'IIIIZYZY', 'IIIIZXZX', 'IIIZIYZY', 'IIIZIXZX', 'IYZYIYZY', 'IXZXIYZY', 'IYZYIXZX', 'IXZXIXZX', 'IIZIIYZY', 'IIZIIXZX', 'YZYIIYZY', 'XZXIIYZY', 'YZYIIXZX', 'XZXIIXZX', 'IZIIIYZY', 'IZIIIXZX', 'ZIIIIYZY', 'ZIIIIXZX', 'IIYYYZZY', 'IIXXYZZY', 'IIYYXZZX', 'IIXXXZZX', 'YZZYYZZY', 'XZZXYZZY', 'YZZYXZZX', 'XZZXXZZX', 'IYYIYZZY', 'IXXIYZZY', 'IYYIXZZX', 'IXXIXZZX', 'YYIIYZZY', 'XXIIYZZY', 'YYIIXZZX', 'XXIIXZZX', 'IIIIIZZI', 'IIIIZIZI', 'IIIZIIZI', 'IYZYIIZI', 'IXZXIIZI', 'IIZIIIZI', 'YZYIIIZI', 'XZXIIIZI', 'IZIIIIZI', 'ZIIIIIZI', 'IIIIYIYI', 'IIIIXIXI', 'IIYYIYYI', 'IIXXIYYI', 'IIYYIXXI', 'IIXXIXXI', 'YZZYIYYI', 'XZZXIYYI', 'YZZYIXXI', 'XZZXIXXI', 'IYYIIYYI', 'IXXIIYYI', 'IYYIIXXI', 'IXXIIXXI', 'YYIIIYYI', 'XXIIIYYI', 'YYIIIXXI', 'XXIIIXXI', 'IIIZYZYI', 'IIIZXZXI', 'IYZYYZYI', 'IXZXYZYI', 'IYZYXZXI', 'IXZXXZXI', 'IIZIYZYI', 'IIZIXZXI', 'YZYIYZYI', 'XZXIYZYI', 'YZYIXZXI', 'XZXIXZXI', 'IZIIYZYI', 'IZIIXZXI', 'ZIIIYZYI', 'ZIIIXZXI', 'IIIIZZII', 'IIIZIZII', 'IYZYIZII', 'IXZXIZII', 'IIZIIZII', 'YZYIIZII', 'XZXIIZII', 'IZIIIZII', 'ZIIIIZII', 'IIYYYYII', 'IIXXYYII', 'IIYYXXII', 'IIXXXXII', 'YZZYYYII', 'XZZXYYII', 'YZZYXXII', 'XZZXXXII', 'IYYIYYII', 'IXXIYYII', 'IYYIXXII', 'IXXIXXII', 'YYIIYYII', 'XXIIYYII', 'YYIIXXII', 'XXIIXXII', 'IIIZZIII', 'IYZYZIII', 'IXZXZIII', 'IIZIZIII', 'YZYIZIII', 'XZXIZIII', 'IZIIZIII', 'ZIIIZIII', 'IIZZIIII', 'YZYZIIII', 'XZXZIIII', 'IZIZIIII', 'ZIIZIIII', 'IYIYIIII', 'IXIXIIII', 'YYYYIIII', 'XXYYIIII', 'YXXYIIII', 'XYYXIIII', 'YYXXIIII', 'XXXXIIII', 'ZYZYIIII', 'ZXZXIIII', 'IZZIIIII', 'ZIZIIIII', 'YIYIIIII', 'XIXIIIII', 'ZZIIIIII'],
               coeffs=[-1.85502904e+00+0.j,  4.81583054e-02+0.j,  1.97123182e-03+0.j,
   1.97123182e-03+0.j,  4.27360355e-02+0.j,  2.04558562e-03+0.j,
   2.04558562e-03+0.j,  3.64529858e-02+0.j,  3.06300748e-02+0.j,
@@ -303,7 +439,7 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
   3.45690108e-02+0.j,  3.31222731e-02+0.j, -8.32688202e-03+0.j,
  -8.32688202e-03+0.j,  2.59279774e-02+0.j]),  
 
-          'BH_3times': SparsePauliOp(['IIIIIIIIII', 'IIIIIIIIIZ', 'IIIIIIIIYY', 'IIIIIIIIXX', 'IIIIIIIYZY', 'IIIIIIIXZX', 'IIIIIIIIZI', 'IIIIIIIYYI', 'IIIIIIIXXI', 'IIIIIIIZII', 'IIIIIIZIII', 'IIIIIZIIII', 'IIIIZIIIII', 'IIIYYIIIII', 'IIIXXIIIII', 'IIYZYIIIII', 'IIXZXIIIII', 'IIIZIIIIII', 'IIYYIIIIII', 'IIXXIIIIII', 'IIZIIIIIII', 'IZIIIIIIII', 'ZIIIIIIIII', 'IIIIIIIIZZ', 'IIIIIIIYYZ', 'IIIIIIIXXZ', 'IIIIIIIZIZ', 'IIIIIIZIIZ', 'IIIIIZIIIZ', 'IIIIZIIIIZ', 'IIIYYIIIIZ', 'IIIXXIIIIZ', 'IIYZYIIIIZ', 'IIXZXIIIIZ', 'IIIZIIIIIZ', 'IIYYIIIIIZ', 'IIXXIIIIIZ', 'IIZIIIIIIZ', 'IZIIIIIIIZ', 'ZIIIIIIIIZ', 'IIIIIIIYIY', 'IIIIIIIXIX', 'IIIIIIIZYY', 'IIIIIIIZXX', 'IIIIIIZIYY', 'IIIIIIZIXX', 'IIIIIZIIYY', 'IIIIIZIIXX', 'IIIIZIIIYY', 'IIIIZIIIXX', 'IIIYYIIIYY', 'IIIXXIIIYY', 'IIIYYIIIXX', 'IIIXXIIIXX', 'IIYZYIIIYY', 'IIXZXIIIYY', 'IIYZYIIIXX', 'IIXZXIIIXX', 'IIIZIIIIYY', 'IIIZIIIIXX', 'IIYYIIIIYY', 'IIXXIIIIYY', 'IIYYIIIIXX', 'IIXXIIIIXX', 'IIZIIIIIYY', 'IIZIIIIIXX', 'IZIIIIIIYY', 'IZIIIIIIXX', 'ZIIIIIIIYY', 'ZIIIIIIIXX', 'IIIIIIZYZY', 'IIIIIIZXZX', 'IIIIIZIYZY', 'IIIIIZIXZX', 'IIIIZIIYZY', 'IIIIZIIXZX', 'IIIYYIIYZY', 'IIIXXIIYZY', 'IIIYYIIXZX', 'IIIXXIIXZX', 'IIYZYIIYZY', 'IIXZXIIYZY', 'IIYZYIIXZX', 'IIXZXIIXZX', 'IIIZIIIYZY', 'IIIZIIIXZX', 'IIYYIIIYZY', 'IIXXIIIYZY', 'IIYYIIIXZX', 'IIXXIIIXZX', 'IIZIIIIYZY', 'IIZIIIIXZX', 'IZIIIIIYZY', 'IZIIIIIXZX', 'ZIIIIIIYZY', 'ZIIIIIIXZX', 'IYZZYIYZZY', 'IXZZXIYZZY', 'IYZZYIXZZX', 'IXZZXIXZZX', 'IYZYIIYZZY', 'IXZXIIYZZY', 'IYZYIIXZZX', 'IXZXIIXZZX', 'IYYIIIYZZY', 'IXXIIIYZZY', 'IYYIIIXZZX', 'IXXIIIXZZX', 'YZZZYYZZZY', 'XZZZXYZZZY', 'YZZZYXZZZX', 'XZZZXXZZZX', 'YZZYIYZZZY', 'XZZXIYZZZY', 'YZZYIXZZZX', 'XZZXIXZZZX', 'YZYIIYZZZY', 'XZXIIYZZZY', 'YZYIIXZZZX', 'XZXIIXZZZX', 'IIIIIIIZZI', 'IIIIIIZIZI', 'IIIIIZIIZI', 'IIIIZIIIZI', 'IIIYYIIIZI', 'IIIXXIIIZI', 'IIYZYIIIZI', 'IIXZXIIIZI', 'IIIZIIIIZI', 'IIYYIIIIZI', 'IIXXIIIIZI', 'IIZIIIIIZI', 'IZIIIIIIZI', 'ZIIIIIIIZI', 'IIIIIIZYYI', 'IIIIIIZXXI', 'IIIIIZIYYI', 'IIIIIZIXXI', 'IIIIZIIYYI', 'IIIIZIIXXI', 'IIIYYIIYYI', 'IIIXXIIYYI', 'IIIYYIIXXI', 'IIIXXIIXXI', 'IIYZYIIYYI', 'IIXZXIIYYI', 'IIYZYIIXXI', 'IIXZXIIXXI', 'IIIZIIIYYI', 'IIIZIIIXXI', 'IIYYIIIYYI', 'IIXXIIIYYI', 'IIYYIIIXXI', 'IIXXIIIXXI', 'IIZIIIIYYI', 'IIZIIIIXXI', 'IZIIIIIYYI', 'IZIIIIIXXI', 'ZIIIIIIYYI', 'ZIIIIIIXXI', 'IYZZYIYZYI', 'IXZZXIYZYI', 'IYZZYIXZXI', 'IXZZXIXZXI', 'IYZYIIYZYI', 'IXZXIIYZYI', 'IYZYIIXZXI', 'IXZXIIXZXI', 'IYYIIIYZYI', 'IXXIIIYZYI', 'IYYIIIXZXI', 'IXXIIIXZXI', 'YZZZYYZZYI', 'XZZZXYZZYI', 'YZZZYXZZXI', 'XZZZXXZZXI', 'YZZYIYZZYI', 'XZZXIYZZYI', 'YZZYIXZZXI', 'XZZXIXZZXI', 'YZYIIYZZYI', 'XZXIIYZZYI', 'YZYIIXZZXI', 'XZXIIXZZXI', 'IIIIIIZZII', 'IIIIIZIZII', 'IIIIZIIZII', 'IIIYYIIZII', 'IIIXXIIZII', 'IIYZYIIZII', 'IIXZXIIZII', 'IIIZIIIZII', 'IIYYIIIZII', 'IIXXIIIZII', 'IIZIIIIZII', 'IZIIIIIZII', 'ZIIIIIIZII', 'IYZZYIYYII', 'IXZZXIYYII', 'IYZZYIXXII', 'IXZZXIXXII', 'IYZYIIYYII', 'IXZXIIYYII', 'IYZYIIXXII', 'IXZXIIXXII', 'IYYIIIYYII', 'IXXIIIYYII', 'IYYIIIXXII', 'IXXIIIXXII', 'YZZZYYZYII', 'XZZZXYZYII', 'YZZZYXZXII', 'XZZZXXZXII', 'YZZYIYZYII', 'XZZXIYZYII', 'YZZYIXZXII', 'XZZXIXZXII', 'YZYIIYZYII', 'XZXIIYZYII', 'YZYIIXZXII', 'XZXIIXZXII', 'IIIIIZZIII', 'IIIIZIZIII', 'IIIYYIZIII', 'IIIXXIZIII', 'IIYZYIZIII', 'IIXZXIZIII', 'IIIZIIZIII', 'IIYYIIZIII', 'IIXXIIZIII', 'IIZIIIZIII', 'IZIIIIZIII', 'ZIIIIIZIII', 'YYIIIYYIII', 'XXIIIYYIII', 'YYIIIXXIII', 'XXIIIXXIII', 'IIIIZZIIII', 'IIIYYZIIII', 'IIIXXZIIII', 'IIYZYZIIII', 'IIXZXZIIII', 'IIIZIZIIII', 'IIYYIZIIII', 'IIXXIZIIII', 'IIZIIZIIII', 'IZIIIZIIII', 'ZIIIIZIIII', 'IIIZZIIIII', 'IIYYZIIIII', 'IIXXZIIIII', 'IIZIZIIIII', 'IZIIZIIIII', 'ZIIIZIIIII', 'IIYIYIIIII', 'IIXIXIIIII', 'IIZYYIIIII', 'IIZXXIIIII', 'IZIYYIIIII', 'IZIXXIIIII', 'ZIIYYIIIII', 'ZIIXXIIIII', 'IZYZYIIIII', 'IZXZXIIIII', 'ZIYZYIIIII', 'ZIXZXIIIII', 'IIZZIIIIII', 'IZIZIIIIII', 'ZIIZIIIIII', 'IZYYIIIIII', 'IZXXIIIIII', 'ZIYYIIIIII', 'ZIXXIIIIII', 'IZZIIIIIII', 'ZIZIIIIIII', 'ZZIIIIIIII'],
+          'BH_3times_Melbourne': SparsePauliOp(['IIIIIIIIII', 'IIIIIIIIIZ', 'IIIIIIIIYY', 'IIIIIIIIXX', 'IIIIIIIYZY', 'IIIIIIIXZX', 'IIIIIIIIZI', 'IIIIIIIYYI', 'IIIIIIIXXI', 'IIIIIIIZII', 'IIIIIIZIII', 'IIIIIZIIII', 'IIIIZIIIII', 'IIIYYIIIII', 'IIIXXIIIII', 'IIYZYIIIII', 'IIXZXIIIII', 'IIIZIIIIII', 'IIYYIIIIII', 'IIXXIIIIII', 'IIZIIIIIII', 'IZIIIIIIII', 'ZIIIIIIIII', 'IIIIIIIIZZ', 'IIIIIIIYYZ', 'IIIIIIIXXZ', 'IIIIIIIZIZ', 'IIIIIIZIIZ', 'IIIIIZIIIZ', 'IIIIZIIIIZ', 'IIIYYIIIIZ', 'IIIXXIIIIZ', 'IIYZYIIIIZ', 'IIXZXIIIIZ', 'IIIZIIIIIZ', 'IIYYIIIIIZ', 'IIXXIIIIIZ', 'IIZIIIIIIZ', 'IZIIIIIIIZ', 'ZIIIIIIIIZ', 'IIIIIIIYIY', 'IIIIIIIXIX', 'IIIIIIIZYY', 'IIIIIIIZXX', 'IIIIIIZIYY', 'IIIIIIZIXX', 'IIIIIZIIYY', 'IIIIIZIIXX', 'IIIIZIIIYY', 'IIIIZIIIXX', 'IIIYYIIIYY', 'IIIXXIIIYY', 'IIIYYIIIXX', 'IIIXXIIIXX', 'IIYZYIIIYY', 'IIXZXIIIYY', 'IIYZYIIIXX', 'IIXZXIIIXX', 'IIIZIIIIYY', 'IIIZIIIIXX', 'IIYYIIIIYY', 'IIXXIIIIYY', 'IIYYIIIIXX', 'IIXXIIIIXX', 'IIZIIIIIYY', 'IIZIIIIIXX', 'IZIIIIIIYY', 'IZIIIIIIXX', 'ZIIIIIIIYY', 'ZIIIIIIIXX', 'IIIIIIZYZY', 'IIIIIIZXZX', 'IIIIIZIYZY', 'IIIIIZIXZX', 'IIIIZIIYZY', 'IIIIZIIXZX', 'IIIYYIIYZY', 'IIIXXIIYZY', 'IIIYYIIXZX', 'IIIXXIIXZX', 'IIYZYIIYZY', 'IIXZXIIYZY', 'IIYZYIIXZX', 'IIXZXIIXZX', 'IIIZIIIYZY', 'IIIZIIIXZX', 'IIYYIIIYZY', 'IIXXIIIYZY', 'IIYYIIIXZX', 'IIXXIIIXZX', 'IIZIIIIYZY', 'IIZIIIIXZX', 'IZIIIIIYZY', 'IZIIIIIXZX', 'ZIIIIIIYZY', 'ZIIIIIIXZX', 'IYZZYIYZZY', 'IXZZXIYZZY', 'IYZZYIXZZX', 'IXZZXIXZZX', 'IYZYIIYZZY', 'IXZXIIYZZY', 'IYZYIIXZZX', 'IXZXIIXZZX', 'IYYIIIYZZY', 'IXXIIIYZZY', 'IYYIIIXZZX', 'IXXIIIXZZX', 'YZZZYYZZZY', 'XZZZXYZZZY', 'YZZZYXZZZX', 'XZZZXXZZZX', 'YZZYIYZZZY', 'XZZXIYZZZY', 'YZZYIXZZZX', 'XZZXIXZZZX', 'YZYIIYZZZY', 'XZXIIYZZZY', 'YZYIIXZZZX', 'XZXIIXZZZX', 'IIIIIIIZZI', 'IIIIIIZIZI', 'IIIIIZIIZI', 'IIIIZIIIZI', 'IIIYYIIIZI', 'IIIXXIIIZI', 'IIYZYIIIZI', 'IIXZXIIIZI', 'IIIZIIIIZI', 'IIYYIIIIZI', 'IIXXIIIIZI', 'IIZIIIIIZI', 'IZIIIIIIZI', 'ZIIIIIIIZI', 'IIIIIIZYYI', 'IIIIIIZXXI', 'IIIIIZIYYI', 'IIIIIZIXXI', 'IIIIZIIYYI', 'IIIIZIIXXI', 'IIIYYIIYYI', 'IIIXXIIYYI', 'IIIYYIIXXI', 'IIIXXIIXXI', 'IIYZYIIYYI', 'IIXZXIIYYI', 'IIYZYIIXXI', 'IIXZXIIXXI', 'IIIZIIIYYI', 'IIIZIIIXXI', 'IIYYIIIYYI', 'IIXXIIIYYI', 'IIYYIIIXXI', 'IIXXIIIXXI', 'IIZIIIIYYI', 'IIZIIIIXXI', 'IZIIIIIYYI', 'IZIIIIIXXI', 'ZIIIIIIYYI', 'ZIIIIIIXXI', 'IYZZYIYZYI', 'IXZZXIYZYI', 'IYZZYIXZXI', 'IXZZXIXZXI', 'IYZYIIYZYI', 'IXZXIIYZYI', 'IYZYIIXZXI', 'IXZXIIXZXI', 'IYYIIIYZYI', 'IXXIIIYZYI', 'IYYIIIXZXI', 'IXXIIIXZXI', 'YZZZYYZZYI', 'XZZZXYZZYI', 'YZZZYXZZXI', 'XZZZXXZZXI', 'YZZYIYZZYI', 'XZZXIYZZYI', 'YZZYIXZZXI', 'XZZXIXZZXI', 'YZYIIYZZYI', 'XZXIIYZZYI', 'YZYIIXZZXI', 'XZXIIXZZXI', 'IIIIIIZZII', 'IIIIIZIZII', 'IIIIZIIZII', 'IIIYYIIZII', 'IIIXXIIZII', 'IIYZYIIZII', 'IIXZXIIZII', 'IIIZIIIZII', 'IIYYIIIZII', 'IIXXIIIZII', 'IIZIIIIZII', 'IZIIIIIZII', 'ZIIIIIIZII', 'IYZZYIYYII', 'IXZZXIYYII', 'IYZZYIXXII', 'IXZZXIXXII', 'IYZYIIYYII', 'IXZXIIYYII', 'IYZYIIXXII', 'IXZXIIXXII', 'IYYIIIYYII', 'IXXIIIYYII', 'IYYIIIXXII', 'IXXIIIXXII', 'YZZZYYZYII', 'XZZZXYZYII', 'YZZZYXZXII', 'XZZZXXZXII', 'YZZYIYZYII', 'XZZXIYZYII', 'YZZYIXZXII', 'XZZXIXZXII', 'YZYIIYZYII', 'XZXIIYZYII', 'YZYIIXZXII', 'XZXIIXZXII', 'IIIIIZZIII', 'IIIIZIZIII', 'IIIYYIZIII', 'IIIXXIZIII', 'IIYZYIZIII', 'IIXZXIZIII', 'IIIZIIZIII', 'IIYYIIZIII', 'IIXXIIZIII', 'IIZIIIZIII', 'IZIIIIZIII', 'ZIIIIIZIII', 'YYIIIYYIII', 'XXIIIYYIII', 'YYIIIXXIII', 'XXIIIXXIII', 'IIIIZZIIII', 'IIIYYZIIII', 'IIIXXZIIII', 'IIYZYZIIII', 'IIXZXZIIII', 'IIIZIZIIII', 'IIYYIZIIII', 'IIXXIZIIII', 'IIZIIZIIII', 'IZIIIZIIII', 'ZIIIIZIIII', 'IIIZZIIIII', 'IIYYZIIIII', 'IIXXZIIIII', 'IIZIZIIIII', 'IZIIZIIIII', 'ZIIIZIIIII', 'IIYIYIIIII', 'IIXIXIIIII', 'IIZYYIIIII', 'IIZXXIIIII', 'IZIYYIIIII', 'IZIXXIIIII', 'ZIIYYIIIII', 'ZIIXXIIIII', 'IZYZYIIIII', 'IZXZXIIIII', 'ZIYZYIIIII', 'ZIXZXIIIII', 'IIZZIIIIII', 'IZIZIIIIII', 'ZIIZIIIIII', 'IZYYIIIIII', 'IZXXIIIIII', 'ZIYYIIIIII', 'ZIXXIIIIII', 'IZZIIIIIII', 'ZIZIIIIIII', 'ZZIIIIIIII'],
               coeffs=[-2.11323387e+00+0.j, -1.58285826e-01+0.j, -1.57643583e-02+0.j,
  -1.57643583e-02+0.j,  5.91524282e-03+0.j,  5.91524282e-03+0.j,
  -1.30233091e-01+0.j,  1.22197302e-01+0.j,  1.22197302e-01+0.j,
@@ -399,16 +535,16 @@ Observable = {'H4_1times':  SparsePauliOp(['IIIIIIII', 'IIIIIIIZ', 'IIIIIYZY', '
           }
 
 
-Energy_shift = {'H4_1times':  2.29310124732,
+Energy_shift = {'H4_1times_Rueschlikon':  2.29310124732,
 
-          'H4_2times':  1.14655062366,
+          'H4_2times_Melbourne':  1.14655062366,
 
-          'H4_25times': 0.917240498928,
+          'H4_225times_Melbourne': 1.01915610992,
 
-          'H4_225times': 1.01915610992,
+          'H4_25times_Melbourne': 0.917240498928,  
 
-          'H4_3times': 0.76436708244,  
+          'H4_3times_Melbourne': 0.76436708244,  
 
-          'BH_3times': -21.194642207066963
+          'BH_3times_Melbourne': -21.194642207066963
           }
 
