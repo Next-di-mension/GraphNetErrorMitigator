@@ -9,8 +9,9 @@ weight_decay: 5e-4
 epochs: 100
 patience: 30
 model_path: src/models/
-bond_length: 2
+bond_length: 175
 beta: 0.007 
 data_path: src/tmp/
 molecule: BH
+machine: Guadalupe
 
