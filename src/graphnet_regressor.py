@@ -22,7 +22,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description="Graph Neural Network Training and Evaluation")
     
     # Parse the YAML file
-    with open('src/config/gnn_config.yml', "r") as stream:
+    with open('config/gnn_config.yml', "r") as stream:
         config = yaml.safe_load(stream)
 
     parser.add_argument('--num_features', type=int, default=config['num_features'], help='Number of features')
