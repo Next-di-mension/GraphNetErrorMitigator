@@ -19,20 +19,20 @@ warnings.filterwarnings('ignore')
 
 # Constants and Globals
 SEED = 170
-NUM_QUBITS = 8
+NUM_QUBITS = 10
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Quantum VQE Simulation")
     parser.add_argument(
         '--bond_length', 
         type=int, 
-        default=25, 
+        default=125, 
         help='Bond length'
     )
     parser.add_argument(
         '--molecule', 
         type=str, 
-        default='H4', 
+        default='BH', 
         help='Molecule'
     )
     parser.add_argument(
@@ -56,11 +56,19 @@ def parse_arguments():
     parser.add_argument(
         '--device_str',
         type=str,
-        default='Melbourne',
+        default='Guadalupe',
         help='device to run on'
     )
     return parser.parse_args()
 
+def select_device(device_str):
+    if device_str == 'Melbourne':
+        device = FakeMelbourne()
+    elif device_str == 'Guadalupe':
+        device = FakeGuadalupe()
+    else:
+        raise ValueError('Invalid device string')
+    return device
 
 def initialize_estimators(shots, device_str):
 
@@ -71,13 +79,13 @@ def initialize_estimators(shots, device_str):
         noisy_estimator (AerEstimator): Noisy quantum estimator
         noiseless_estimator (AerEstimator): Noiseless quantum estimator
     """
-    if device_str == 'Melbourne':
-        backend_fake = FakeMelbourne()
+    backend_fake = select_device(device_str)
     coupling_map = backend_fake.configuration().coupling_map
     noise_model = NoiseModel.from_backend(backend_fake)
+    basis_gates = noise_model.basis_gates
 
     noisy_estimator = AerEstimator(
-        backend_options={"method": "statevector", "coupling_map": coupling_map, "noise_model": noise_model},
+        backend_options={"method": "statevector", "coupling_map": coupling_map, "noise_model": noise_model, "basis_gates": basis_gates},
         run_options={"seed": SEED, "shots": shots},
         transpile_options={"seed_transpiler": SEED},
         approximation=True
@@ -97,8 +105,8 @@ def hartree_fock(qc):
     """Applies Hartree-Fock initialization to the quantum circuit."""
     qc.x(0)
     qc.x(1)
-    qc.x(4)
     qc.x(5)
+    qc.x(6)
     return qc
 
 def double_excitation_circ(qc,i,j,k,l,theta):
@@ -149,10 +157,10 @@ def cnot_connectivity(qc):
 
     return cx_edges
 
-def gate_count(qc):
+def gate_count(qc, device_str):
     """Counts the number of gates in a quantum circuit."""
 
-    backend_fake = FakeMelbourne()
+    backend_fake = select_device(device_str)
     noise_model_fake = NoiseModel.from_backend(backend_fake)
     basis_gates = noise_model_fake.basis_gates
     coupling_map = backend_fake.configuration().coupling_map
@@ -164,9 +172,9 @@ def gate_count(qc):
         
         
     tr_qc = transpile(qc, backend=backend, coupling_map=coupling_map,optimization_level=3,seed_transpiler=SEED)
-    print(tr_qc)
+    # print(tr_qc)
     cnot_connections = cnot_connectivity(tr_qc)
-    print(cnot_connections)
+    # print(cnot_connections)
     cnot_count = tr_qc.count_ops()['cx']  # CNOTs
     
     # total gate count
@@ -206,16 +214,17 @@ def main(args):
     device_str = args.device_str
 
     # Initialize ansatz
-    key = molecule + '_'+ str(bond_length) + 'times'
+    key = molecule + '_'+ str(bond_length) + 'times' + '_' + device_str
     ansatz = Ansatz[key]
     print(f"{bond_length} times geometry")
     results = []
     
     # Initialize quantum operators and energies
-    qubit_op = Observable[key]  
-    nuclear_repulsion_energy = Energy_shift[key]  
-    print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
-    print('Energy Shift: ', nuclear_repulsion_energy)
+    
+    # qubit_op = Observable[key]  
+    # nuclear_repulsion_energy = Energy_shift[key]  
+    # print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
+    # print('Energy Shift: ', nuclear_repulsion_energy)
 
     # Initialize estimators
     noisy_estimator, noiseless_estimator = initialize_estimators(shots=shots, device_str=device_str)
@@ -233,28 +242,30 @@ def main(args):
 
     qc = create_ansatz(ansatz, param_list)
     qc_noisy = qc.copy()
-    gate_counts = gate_count(qc)
+    gate_counts = gate_count(qc, device_str)
     
     # Optimization and VQE execution noiseless
     print('t2 noiseless is ', ansatz)
-    optimizer = COBYLA(maxiter=max_iter)
-    vqe = VQE(noiseless_estimator, qc, optimizer=optimizer, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-    vqe_result = vqe.compute_minimum_eigenvalue(qubit_op)
+    # optimizer = COBYLA(maxiter=max_iter)
+    # vqe = VQE(noiseless_estimator, qc, optimizer=optimizer, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
+    # vqe_result = vqe.compute_minimum_eigenvalue(qubit_op)
     
 
-    # Optimization and VQE execution noisy
-    print('t2 noisy is ', ansatz)
-    optimizer_noisy = COBYLA(maxiter=max_iter)
-    vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-    vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
-    print(vqe_result)
+    # # Optimization and VQE execution noisy
+    # print('t2 noisy is ', ansatz)
+    # optimizer_noisy = COBYLA(maxiter=max_iter)
+    # vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
+    # vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
+    # print(vqe_result)
     
     two_qc = gate_counts[0]/gate_counts[2]
     single_qc = gate_counts[1]/gate_counts[2]
     cnot_con = gate_counts[3]
 
-    optimal_energy = vqe_result.eigenvalue + nuclear_repulsion_energy
-    optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
+    # optimal_energy = vqe_result.eigenvalue + nuclear_repulsion_energy
+    # optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
+    optimal_energy = 0
+    optimal_energy_noisy = 0
     results.append((ansatz, optimal_energy_noisy, optimal_energy, two_qc, single_qc, num_t2/len(ansatz), cnot_con)) # num_params = no. of T2s
 
     # Save results to CSV
