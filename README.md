@@ -1,11 +1,10 @@
 # Machine Learning Approach towards Quantum Error Mitigation for Accurate Molecular Energetics
 
+This repository contains a code for implementing the GNN-Regressor EM technique. The code is written in Python 3.8.10 The code is tested on Ubuntu 18.04.5 LTS.
+
 ## Overview
 
 Despite significant efforts, the realization of the variational quantum eigensolvers has predominantly been confined to proof-of-principles, mainly due to the hardware noise. With fault-tolerant implementation being a long-term goal, going beyond small molecules with existing Error Mitigation (EM) techniques with current NISQ devices has been a challenge.  That being said, statistical learning methods are promising approaches to learning the noise and its subsequent mitigation. We devise a graph neural network and regression-based architecture to go beyond the mitigation of 2-electron Hamiltonians. As current qubits are prone to decoherence, ML models should be able to learn features quickly with shallow circuits. We assume that we do not have access to the fault-tolerant qubits and use Sequential Reference State Error Mitigation (SREM) which works seamlessly for shallow-depth circuits. We use these mitigated expectation values obtained as labels in the training data thus eliminating the need for ideal quantum simulators in label generation. The training data is generated on-the-fly during ansatz construction thus removing the computational overhead. Building upon that, We test our method on larger Hamiltonian structures like H4 and BH which yields promising results in determining ground state. 
-
-## Installation
-This repository contains a code for implementing the GNN-Regressor EM technique. The code is written in Python 3.8.10 The code is tested on Ubuntu 18.04.5 LTS.
 
 # Cloning and handling dependencies 
 Clone the repo:
@@ -59,6 +58,9 @@ To run the whole software, run `workflow.py` script:
 ```python   
 python src/workflow.py --config config/gnn_config.py
 ```
+
+## Results
+We tested our model on two quantum devices. IBMQ Melbourne and IBMQ Guadalupe with 15 and 16 qubits respectively for H4 and BH molecules. The results are shown below:
 
 
 
