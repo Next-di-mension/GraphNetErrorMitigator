@@ -1,4 +1,4 @@
-# Machine Learning Approach towards Quantum Error Mitigation for Accurate Molecular Energetics
+# Machine Learning Approach towards Quantum Error Mitigation for Accurate Molecular Energetics.
 
 This repository contains a code for implementing the GNN-Regressor EM technique. The code is written in Python 3.8.10 The code is tested on Ubuntu 18.04.5 LTS.
 
