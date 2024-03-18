@@ -1,4 +1,4 @@
-num_features: 4
+num_features: 6
 num_nodes: 16
 hidden_dim: 64
 hidden_channels: 64
@@ -9,9 +9,9 @@ weight_decay: 5e-4
 epochs: 100
 patience: 30
 model_path: src/models/
-bond_length: 175
-beta: 0.007 
-data_path: src/data/
+bond_length: 25
+beta: 0.0065
+data_path: data/
 molecule: BH
 machine: Guadalupe
 

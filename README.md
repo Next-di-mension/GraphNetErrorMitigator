@@ -5,7 +5,7 @@ This repository contains a code for implementing the GNN-Regressor EM technique.
 ## Overview
 
 <div align="center">
-    <img src="res/model_flow.png" alt="GNN-Regressor workflow" width="450" height="250">
+    <img src="res/gnn_flow.png" alt="GNN-Regressor workflow" width="450" height="250">
 </div>
 
 Despite significant efforts, the realization of the variational quantum eigensolvers has predominantly been confined to proof-of-principles, mainly due to the hardware noise. With fault-tolerant implementation being a long-term goal, going beyond small molecules with existing Error Mitigation (EM) techniques with current NISQ devices has been a challenge.  That being said, statistical learning methods are promising approaches to learning the noise and its subsequent mitigation. We devise a graph neural network and regression-based architecture to go beyond the mitigation of 2-electron Hamiltonians. As current qubits are prone to decoherence, ML models should be able to learn features quickly with shallow circuits. We assume that we do not have access to the fault-tolerant qubits and use Sequential Reference State Error Mitigation (SREM) which works seamlessly for shallow-depth circuits. We use these mitigated expectation values obtained as labels in the training data thus eliminating the need for ideal quantum simulators in label generation. The training data is generated on-the-fly during ansatz construction thus removing the computational overhead. Building upon that, We test our method on larger Hamiltonian structures like H4 and BH which yields promising results in determining ground state. 
