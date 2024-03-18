@@ -26,7 +26,7 @@ def parse_arguments():
     parser.add_argument(
         '--bond_length', 
         type=int, 
-        default=125, 
+        default=225, 
         help='Bond length'
     )
     parser.add_argument(
@@ -50,7 +50,7 @@ def parse_arguments():
     parser.add_argument(
        '--data_path',
         type=str,
-        default='src/tmp/' ,
+        default='data/' ,
         help='Path to save data'
     )
     parser.add_argument(

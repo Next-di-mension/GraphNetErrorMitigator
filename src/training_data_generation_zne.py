@@ -14,6 +14,29 @@ from qiskit_algorithms.optimizers import COBYLA
 import warnings
 from geometry_params import * 
 
+
+from qiskit import QuantumCircuit
+from qiskit.compiler import transpile
+from qiskit.providers.fake_provider import *
+from qiskit.circuit import QuantumCircuit, Parameter
+from qiskit_aer import AerSimulator
+
+from qiskit.quantum_info import SparsePauliOp
+from qiskit.primitives import BackendEstimator, Estimator
+
+from zne import zne, ZNEStrategy
+from zne.noise_amplification import LocalFoldingAmplifier, GlobalFoldingAmplifier
+from zne.extrapolation import *
+
+import numpy as np
+
+from qiskit.providers.fake_provider import FakeManila, FakeMelbourne, FakeGuadalupe
+from qiskit_aer.noise import NoiseModel
+import qiskit_aer.noise as noise
+from scipy.optimize import minimize
+from qiskit import QuantumCircuit, Aer
+from qiskit.circuit import Parameter
+
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
 
@@ -25,19 +48,19 @@ def parse_arguments():
     parser.add_argument(
         '--bond_length', 
         type=int, 
-        default=225, 
+        default=2, 
         help='Bond length'
     )
     parser.add_argument(
         '--num_qubits',
         type=int,
-        default=10,
+        default=8,
         help='Number of qubits'
     )
     parser.add_argument(
         '--molecule', 
         type=str, 
-        default='BH', 
+        default='H4', 
         help='Molecule'
     )
     parser.add_argument(
@@ -67,7 +90,7 @@ def parse_arguments():
     parser.add_argument(
         '--device_str',
         type=str,
-        default='Guadalupe',
+        default='Melbourne',
         help='device to run on'
     )
     return parser.parse_args()
@@ -164,40 +187,6 @@ def single_excitation_circ(qc,i,k,theta):
 
     return qc
 
-def cnot_connectivity(qc):
-    
-    """Returns the connectivity of CNOT gates in a quantum circuit."""
-    
-    cx_edges = [(i.qubits[0].index,i.qubits[1].index) for i in qc if i.operation.name == 'cx']
-
-    return cx_edges
-
-def gate_count(qc, device_str):
-    """Counts the number of gates in a quantum circuit."""
-
-    backend_fake = select_device(device_str)
-    noise_model_fake = NoiseModel.from_backend(backend_fake)
-    basis_gates = noise_model_fake.basis_gates
-    coupling_map = backend_fake.configuration().coupling_map
-
-
-    backend = AerSimulator(noise_model=noise_model_fake,
-                        coupling_map=coupling_map,
-                        basis_gates=basis_gates)
-        
-        
-    tr_qc = transpile(qc, backend=backend, coupling_map=coupling_map,optimization_level=3,seed_transpiler=SEED)
-    cnot_connections = cnot_connectivity(tr_qc)
-    cnot_count = tr_qc.count_ops()['cx']  # CNOTs
-    # print(tr_qc)
-    # total gate count
-    total = sum(tr_qc.count_ops().values())
-    single_qubit_count = total - cnot_count
-
-    return cnot_count, single_qubit_count, total, cnot_connections
-
-
-
 def create_ansatz(exitations, parameters, num_qubits):
 
     """Creates a quantum circuit (ansatz) based on given parameters.
@@ -207,19 +196,82 @@ def create_ansatz(exitations, parameters, num_qubits):
     Returns:
         qc (QuantumCircuit): Quantum circuit (ansatz)
     """
-    singles_count = 0
-    doubles_count = 0
+
     qc = QuantumCircuit(num_qubits)
     hartree_fock(qc)
     for n in range(len(exitations)):
         if exitations[n][0][1] == 0 and  exitations[n][1][1] == 0:
-            singles_count += 1
             qc = single_excitation_circ(qc, exitations[n][0][0], exitations[n][1][0], parameters[n])
         else:
-            doubles_count += 1
             qc = double_excitation_circ(qc, exitations[n][0][0], exitations[n][0][1], exitations[n][1][0], exitations[n][1][1], parameters[n])
-    return qc, singles_count, doubles_count
+    return qc
+
+
+list_mitigated_result = []
+list_noise_energy = []
+
+def cost_func(device_str, shots, qubit_op, combinations, num_qubits, nuclear_repulsion_energy):
+    """Return estimate of energy from estimator on noisy backend
+
+    Returns:
+        float: Energy estimate
+    """
+    def execution(parameters):
+        '''Parameters:
+        params (ndarray): Array of ansatz parameters
+        '''     
+        qc = create_ansatz(combinations, parameters, num_qubits)
+        backend_fake = select_device(device_str) 
+        noise_model_fake = NoiseModel.from_backend(backend_fake)
+        basis_gates = noise_model_fake.basis_gates
+        coupling_map = backend_fake.configuration().coupling_map
+
+
+        backend = AerSimulator(noise_model=noise_model_fake,
+                        coupling_map=coupling_map,
+                        basis_gates=basis_gates)
+        
+        observable = qubit_op
+        ZNEEstimator = zne(BackendEstimator)
+        # ZNEEstimator = zne(Estimator(options={'shots': shots, 'seed_simulator': SEED}))
+        # estimator = ZNEEstimator(backend=backend, options={'shots': shots, 'seed_simulator': SEED})
     
+        estimator = ZNEEstimator(backend=backend, 
+                                options={"seed": SEED, "shots": shots})
+
+        zne_strategy = ZNEStrategy(
+        noise_factors=[1,3,5],
+        noise_amplifier=GlobalFoldingAmplifier(),
+        extrapolator=LinearExtrapolator()
+        )
+
+        job = estimator.run(qc, observable, shots=shots, zne_strategy=zne_strategy)
+        result = job.result()
+        print(result)
+        mitigated_energy = result.values
+        
+        noisy_energy = result.metadata[0]['zne']['noise_amplification']['values'][0]
+
+        print("==============with noise model===========")
+        print(f">>> Expectation value (Hartree): {noisy_energy + nuclear_repulsion_energy}")
+        print(f">>> Total ground state energy (Hartree): {noisy_energy + nuclear_repulsion_energy}")
+        print("=============================\n")
+
+        print("=============mitigated==========")
+        print(f">>> Expectation value (Hartree): {mitigated_energy + nuclear_repulsion_energy}")
+        print(f">>> Total ground state energy (Hartree): {mitigated_energy + nuclear_repulsion_energy}")
+        print("=============================\n")
+
+        list_mitigated_result.append(mitigated_energy)
+        list_noise_energy.append(noisy_energy)
+            
+        return mitigated_energy[0]
+        
+    return execution
+
+
+
+
 def main(args):
 
     """Main function to execute the VQE algorithm and save results."""
@@ -241,64 +293,44 @@ def main(args):
     results = []
     
     # Initialize quantum operators and energies
-    # qubit_op = Observable[key]  
-    # nuclear_repulsion_energy = Energy_shift[key]  
-    # print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
-    # print('Energy Shift: ', nuclear_repulsion_energy)
+    qubit_op = Observable[key]  
+    nuclear_repulsion_energy = Energy_shift[key]  
+    print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
+    print('Energy Shift: ', nuclear_repulsion_energy)
 
-    # Initialize estimators
-    noisy_estimator, noiseless_estimator = initialize_estimators(shots=shots, device_str=device_str)
     for num_t2 in range(1, num_params+1):
-        # num_t2 = 1
-        # num_params = 1  
-        energy_list = []
-        def store_intermediate_result(eval_count, parameters, mean, std):
-            energy_list.append(mean+nuclear_repulsion_energy)
-            print('Energy',mean+nuclear_repulsion_energy)
-        # Create list of parameters for the ansatz
-        param_list = [Parameter(f'phi{i}') for i in range(num_params)]
-        
+
         # Prepare combinations for ansatz
         T2_combinations = list(itertools.combinations(ansatz, num_t2))
         
         for combinations in T2_combinations:
-            qc = create_ansatz(combinations, param_list, num_qubits)
-            qc1 = qc[0]
-            # singles = qc[1]
-            # doubles = qc[2]
-            # qc_noisy = qc.copy()
-            gate_counts = gate_count(qc1, device_str)
-    
-            # Optimization and VQE execution noiseless
-            # print('t2 noiseless is ', combinations)
-            # optimizer = COBYLA(maxiter=max_iter)
-            # vqe = VQE(noiseless_estimator, qc, optimizer=optimizer, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-            # vqe_result = vqe.compute_minimum_eigenvalue(qubit_op)
-            
-
-            # Optimization and VQE execution noisy
             print('t2 noisy is ', combinations)
-            # optimizer_noisy = COBYLA(maxiter=max_iter)
-            # vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-            # vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
+            
+            observable = qubit_op
+            list_noise_energy =[]
+            initial_theta = [0.0]*num_t2
+
+            vqe_result_noisy= minimize(
+                    cost_func(device_str, shots, observable, combinations, num_qubits, nuclear_repulsion_energy),
+                    x0=initial_theta,
+                    method='COBYLA',
+                    options={'maxiter':max_iter}   
+                    )
+
+            print(vqe_result_noisy)
+            print('noisy energy values', list_noise_energy)
+            print('mitigated energy values', list_mitigated_result) 
 
             if num_t2 == 1:
                 combinations = combinations[0]
-            
-            two_qc = gate_counts[0]/gate_counts[2]
-            single_qc = gate_counts[1]/gate_counts[2]
-            cnot_con = gate_counts[3]
 
-            # optimal_energy = vqe_result.eigenvalue + nuclear_repulsion_energy
-            # optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
-            optimal_energy = 0
-            optimal_energy_noisy = 0
-            results.append((combinations, optimal_energy_noisy, optimal_energy, two_qc, single_qc, num_t2/len(ansatz), cnot_con)) # num_params = no. of T2s
+            optimal_energy_noisy = vqe_result_noisy
+            results.append((combinations, optimal_energy_noisy)) 
            
     # Save results to CSV
-    path = data_path+str(bond_length)+'times_noise_train_data_' + device_str + '_' + molecule + '.csv'
+    path = data_path+str(bond_length)+'times_noise_train_data_zne_' + device_str + '_' + molecule + '.csv'
     
-    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx', 'Ideal_val', 'two_qc_ratio', 'single_qc_ratio', 'param_ratio', 'cnot_con'])
+    EM_data = pd.DataFrame(results, columns=['Operator', 'Noisy_val_approx'])
     EM_data.to_csv(path, mode='a', index=False)
 
 if __name__ == '__main__':
