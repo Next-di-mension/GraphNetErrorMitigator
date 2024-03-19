@@ -37,6 +37,7 @@ pip install -r requirements.txt
 │   ├── train_data_generation.py
 |   ├── workflow.py
 ├── LICENSE
+├── .gitignore
 ├── requirements.txt
 ├── README.md
 
@@ -48,7 +49,7 @@ The code is divided into two main parts:
 2. Model Training and Testing
 
 ### Data Generation
-To generate training data, run `train_data_generation.py` by using the appropriate coniguration file depending upon the molecule. For example, to generate training data for H4 molecule, run:
+To generate training data, run `train_data_generation.py` by using the appropriate configuration file depending upon the molecule. For example, to generate training data for the H4 molecule, run:
 ```python
 python src/train_data_generation.py --config config/h4.py
 ```
