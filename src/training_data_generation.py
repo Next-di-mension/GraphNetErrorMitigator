@@ -13,6 +13,8 @@ from qiskit_algorithms import VQE
 from qiskit_algorithms.optimizers import COBYLA
 import warnings
 from geometry_params import * 
+import yaml
+from time import time
 
 # Suppress warnings for cleaner output
 warnings.filterwarnings('ignore')
@@ -21,55 +23,22 @@ warnings.filterwarnings('ignore')
 SEED = 170
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description="Quantum VQE Simulation")
-    parser.add_argument(
-        '--bond_length', 
-        type=int, 
-        default=225, 
-        help='Bond length'
-    )
-    parser.add_argument(
-        '--num_qubits',
-        type=int,
-        default=10,
-        help='Number of qubits'
-    )
-    parser.add_argument(
-        '--molecule', 
-        type=str, 
-        default='BH', 
-        help='Molecule'
-    )
-    parser.add_argument(
-        '--num_params', 
-        type=int, 
-        default=3, 
-        help='Number of parameters'
-    )
-    parser.add_argument(
-        '--max_iter', 
-        type=int, 
-        default=2000, 
-        help='Maximum iterations for optimizer'
-    )
-    parser.add_argument(
-        '--shots', 
-        type=int, 
-        default=30000, 
-        help='Number of shots for simulation'
-    )
-    parser.add_argument(
-       '--data_path',
-        type=str,
-        default='data/' ,
-        help='Path to save data'
-    )
-    parser.add_argument(
-        '--device_str',
-        type=str,
-        default='Guadalupe',
-        help='device to run on'
-    )
+
+    parser = argparse.ArgumentParser(description="Graph Neural Network Training and Evaluation")
+    
+    # Parse the YAML file
+    with open('config/molecule.yml', "r") as stream:
+        config = yaml.safe_load(stream)
+
+    parser.add_argument('--bond_length', type=int, default=config['bond_length'], help='Bond length')
+    parser.add_argument('--num_qubits', type=int, default=config['num_qubits'], help='Number of qubits')
+    parser.add_argument('--molecule', type=str, default=config['molecule'], help='Molecule')
+    parser.add_argument('--num_params', type=int, default=config['num_params'], help='Number of parameters')
+    parser.add_argument('--max_iter', type=int, default=config['max_iter'], help='Maximum iterations for optimizer')
+    parser.add_argument('--shots', type=int, default=config['shots'], help='Number of shots for simulation')
+    parser.add_argument('--data_path', type=str, default=config['data_path'], help='Path to save data')
+    parser.add_argument('--device_str', type=str, default=config['device_str'], help='device to run on')
+    
     return parser.parse_args()
 
 def select_device(device_str):
@@ -77,9 +46,6 @@ def select_device(device_str):
         device = FakeMelbourne()
     elif device_str == 'Guadalupe':
         device = FakeGuadalupe()
-    elif device_str == 'Rueschlikon':
-        # device = FakeRueschlikon()
-        device = FakeTokyo()
     else:
         raise ValueError('Invalid device string')
     return device
@@ -241,10 +207,10 @@ def main(args):
     results = []
     
     # Initialize quantum operators and energies
-    # qubit_op = Observable[key]  
-    # nuclear_repulsion_energy = Energy_shift[key]  
-    # print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
-    # print('Energy Shift: ', nuclear_repulsion_energy)
+    qubit_op = Observable[key]  
+    nuclear_repulsion_energy = Energy_shift[key]  
+    print('Nuclear Repulsion Energy: ', nuclear_repulsion_energy)
+    print('Energy Shift: ', nuclear_repulsion_energy)
 
     # Initialize estimators
     noisy_estimator, noiseless_estimator = initialize_estimators(shots=shots, device_str=device_str)
@@ -266,21 +232,21 @@ def main(args):
             qc1 = qc[0]
             # singles = qc[1]
             # doubles = qc[2]
-            # qc_noisy = qc.copy()
+            qc_noisy = qc.copy()
             gate_counts = gate_count(qc1, device_str)
     
             # Optimization and VQE execution noiseless
-            # print('t2 noiseless is ', combinations)
-            # optimizer = COBYLA(maxiter=max_iter)
-            # vqe = VQE(noiseless_estimator, qc, optimizer=optimizer, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-            # vqe_result = vqe.compute_minimum_eigenvalue(qubit_op)
+            print('t2 noiseless is ', combinations)
+            optimizer = COBYLA(maxiter=max_iter)
+            vqe = VQE(noiseless_estimator, qc, optimizer=optimizer, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
+            vqe_result = vqe.compute_minimum_eigenvalue(qubit_op)
             
 
             # Optimization and VQE execution noisy
             print('t2 noisy is ', combinations)
-            # optimizer_noisy = COBYLA(maxiter=max_iter)
-            # vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
-            # vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
+            optimizer_noisy = COBYLA(maxiter=max_iter)
+            vqe_noisy = VQE(noisy_estimator, qc_noisy, optimizer=optimizer_noisy, callback=store_intermediate_result, initial_point=[0.0]*num_t2)
+            vqe_result_noisy = vqe_noisy.compute_minimum_eigenvalue(qubit_op)
 
             if num_t2 == 1:
                 combinations = combinations[0]
@@ -289,10 +255,10 @@ def main(args):
             single_qc = gate_counts[1]/gate_counts[2]
             cnot_con = gate_counts[3]
 
-            # optimal_energy = vqe_result.eigenvalue + nuclear_repulsion_energy
-            # optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
-            optimal_energy = 0
-            optimal_energy_noisy = 0
+            optimal_energy = vqe_result.eigenvalue + nuclear_repulsion_energy
+            optimal_energy_noisy = vqe_result_noisy.eigenvalue + nuclear_repulsion_energy
+            # optimal_energy = 0
+            # optimal_energy_noisy = 0
             results.append((combinations, optimal_energy_noisy, optimal_energy, two_qc, single_qc, num_t2/len(ansatz), cnot_con)) # num_params = no. of T2s
            
     # Save results to CSV
@@ -302,5 +268,7 @@ def main(args):
     EM_data.to_csv(path, mode='a', index=False)
 
 if __name__ == '__main__':
+    start_time = time()
     args = parse_arguments()
     main(args)
+    print(f'Total time taken: {time() - start_time} seconds')
