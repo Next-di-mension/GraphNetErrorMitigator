@@ -60,7 +60,7 @@ We generate data in two settings; one with the ideal labels and one with the lab
 
 | Operator | Noisy | Ideal | SREM | 2 qubit gates | 1 qubit gates | Singles | Doubles | Params | Edges |
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|-----------------|
-| ((1, 6), (2, 7)) | -24.59 | -24.62 | -24.61 | 0.333333333 | 0.6666666670 | 0 | 0.083 | 0.0625 | [(13, 12), (10, 12), ..., (2, 3)] |
+| ((1, 6), (2, 7)) | -24.59 | -24.62 | -24.61 | 0.333333333 | 0.6666666670 | 0 | 0.083 | 0.0625 | [(13, 12), (10, 12), ...] |
 
 
 ### Model Training and Testing
