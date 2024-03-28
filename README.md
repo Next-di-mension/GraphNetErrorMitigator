@@ -77,7 +77,8 @@ python src/workflow.py --config config/gnn_config.py
 ```
 
 ## Results
-We tested our model on two quantum devices. IBMQ Melbourne and IBMQ Guadalupe with 15 and 16 qubits respectively for H4 and BH molecules. The results are shown below:
+We tested our model on the noise model of two quantum devices. IBMQ Melbourne and IBMQ Guadalupe with 14 and 16 qubits respectively for H4 and BH molecules. The results are shown below: 
+
 
 
 
