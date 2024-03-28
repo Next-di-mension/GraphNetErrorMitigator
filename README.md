@@ -29,6 +29,7 @@ pip install -r requirements.txt
 ├── config
 │   ├── gnn_config.py
 │   ├── molecule.py
+├── res
 ├── src
 │   ├── gate_errors.py
 │   ├── geometry_params.py
