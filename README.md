@@ -23,7 +23,7 @@ Despite significant efforts, the realization of the variational quantum eigensol
 # Cloning and handling dependencies 
 Clone the repo:
 ```
- git clone https://github.com/Next-di-mension/GraphNetMitigator.git
+ git clone https://github.com/Next-di-mension/GraphNetErrorMitigator.git
 ```
 ### Install the dependencies:
 ```
