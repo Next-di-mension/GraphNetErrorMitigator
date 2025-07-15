@@ -39,7 +39,7 @@ pip install -r requirements.txt
 ├── src
 │   ├── gate_errors.py
 │   ├── geometry_params.py
-│   ├── graphnet_regressor.py
+│   ├── train.py
 │   ├── test_data_generation.py
 │   ├── train_data_generation.py
 │   ├── train_data_generation_zne.py
@@ -73,7 +73,7 @@ We generate data in two settings: one with the ideal labels and one with the lab
 ### Model Training and Testing
 To train and test the model, run the `graphnet_regressor.py` script. For example, to train and test the model for H4 or BH molecule, run:
 ```python
-python src/graphnet_regressor.py --config config/gnn_config.py
+python src/train.py --config config/gnn_config.py
 ```
 With appropriate config parameters depending on the quantum device used. The specifications of the quantum device, like gate errors, are included in the `gate_errors.py` file. Other parameters related to the geometry of the molecule and the corresponding ansatz used are in the `geometry_params.py` file. 
 
