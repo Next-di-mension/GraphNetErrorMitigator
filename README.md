@@ -41,8 +41,8 @@ pip install -r requirements.txt
 │   ├── geometry_params.py
 │   ├── train.py
 │   ├── test_data_generation.py
-│   ├── train_data_generation.py
-│   ├── train_data_generation_zne.py
+│   ├── training_data_generation.py
+│   ├── training_data_generation_zne.py
 |   ├── workflow.py
 ├── LICENSE
 ├── .gitignore
@@ -57,9 +57,9 @@ The code is divided into two main parts:
 2. Model Training and Testing
 
 ### Data Generation
-To generate training data, run `train_data_generation.py` using the appropriate configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
+To generate training data, run `training_data_generation.py` using the appropriate configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
 ```python
-python src/train_data_generation.py --config config/h4.py
+python src/training_data_generation.py --config config/h4.py
 ```
 This will generate and save the training data in the `data` directory. Generate the test data similarly using the `test_data_generation.py` script. 
 
