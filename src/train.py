@@ -145,19 +145,19 @@ def train_and_evaluate(model, train_loader, val_loader, optimizer, epochs, beta,
 
 
         # Validation Phase
-        # model.eval()
-        # val_loss = 0
-        # with torch.no_grad():
-        #     for batch in val_loader:
-        #         target = batch[2].reshape(1, -1)
-        #         output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1])
-        #         val_loss += F.smooth_l1_loss(output, target, beta=beta).item()
+        model.eval()
+        val_loss = 0
+        with torch.no_grad():
+            for batch in val_loader:
+                target = batch[2].reshape(1, -1)
+                output = model(batch[0].x, batch[0].edge_index, batch[0].edge_attr, batch[1])
+                val_loss += F.smooth_l1_loss(output, target, beta=beta).item()
                
-        #     val_loss /= len(val_loader)
-        #     print(f"Validation Loss: {val_loss}")
+            val_loss /= len(val_loader)
+            print(f"Validation Loss: {val_loss}")
             
-        # if val_loss < best_loss:
-        #     best_loss = val_loss
+        if val_loss < best_loss:
+            best_loss = val_loss
 
             # save best loss model 
             model_save_path =  model_path+str(bond_length)+'times_gnn_bestloss_model.pt'
