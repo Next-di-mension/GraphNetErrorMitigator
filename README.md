@@ -57,14 +57,14 @@ The code is divided into two main parts:
 2. Model Training and Testing
 
 ### Data Generation
-First make sure to have created a data directory if it doesnt exist already. To generate training data, run `training_data_generation.py` using the appropriate parameters in the configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
+To generate training data, run `training_data_generation.py` using the appropriate parameters in the configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
 ```python
 python src/training_data_generation.py --config config/molecule.yml
 ```
 This will generate and save the training data in the `data` directory. Generate the test data similarly using the `test_data_generation.py` script. Note that in the test data, the column `Noisy_val_approx` is filled with zero while generating the data. In order to fill this column, one needs to independently run the VQE on selected device and the ansatz that is provided for corresponding molecule in `gnn_config.yml` file. This will generate the noisy expectation value of the final ansatz. 
 
 ### Demo Data
-We generate data in two settings: one with the ideal labels and one with the labels generated using the SREM technique. Here is a small snippet of how the data looks
+We generate data in two settings: one with the ideal labels and one with the labels generated using the SREM technique. To generate the SREM data, follow the supplementary material in the paper. Here is a small snippet of how the data looks
 
 | Operator | Noisy | Ideal | SREM | 2 qubit gates | 1 qubit gates | Singles | Doubles | Params | Edges |
 |----------|----------|----------|----------|----------|----------|----------|----------|----------|----------|
