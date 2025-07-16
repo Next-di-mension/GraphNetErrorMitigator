@@ -19,20 +19,20 @@ warnings.filterwarnings('ignore')
 
 # Constants and Globals
 SEED = 170
-NUM_QUBITS = 10
+NUM_QUBITS = 8
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Quantum VQE Simulation")
     parser.add_argument(
         '--bond_length', 
         type=int, 
-        default=225, 
+        default=2, 
         help='Bond length'
     )
     parser.add_argument(
         '--molecule', 
         type=str, 
-        default='BH', 
+        default='H4', 
         help='Molecule'
     )
     parser.add_argument(
@@ -56,7 +56,7 @@ def parse_arguments():
     parser.add_argument(
         '--device_str',
         type=str,
-        default='Guadalupe',
+        default='Melbourne',
         help='device to run on'
     )
     return parser.parse_args()
