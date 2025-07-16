@@ -11,7 +11,7 @@ patience: 30
 model_path: src/models/
 bond_length: 2
 beta: 0.025
-data_path: src/data/
+data_path: data/
 molecule: H4
 machine: Melbourne
 
