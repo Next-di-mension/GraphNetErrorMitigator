@@ -33,8 +33,8 @@ pip install -r requirements.txt
 ```
 .
 ├── config
-│   ├── gnn_config.py
-│   ├── molecule.py
+│   ├── gnn_config.yml
+│   ├── molecule.yml
 ├── res
 ├── src
 │   ├── gate_errors.py
@@ -57,11 +57,11 @@ The code is divided into two main parts:
 2. Model Training and Testing
 
 ### Data Generation
-To generate training data, run `training_data_generation.py` using the appropriate configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
+To generate training data, run `training_data_generation.py` using the appropriate parameters in the configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
 ```python
-python src/training_data_generation.py --config config/h4.py
+python src/training_data_generation.py --config config/molecule.yml
 ```
-This will generate and save the training data in the `data` directory. Generate the test data similarly using the `test_data_generation.py` script. 
+This will generate and save the training data in the `data` directory. Generate the test data similarly using the `test_data_generation.py` script. Note that in the test data, the column `Noisy_val_approx` is filled with zero while generating the data. In order to fill this column, one needs to independently run the VQE on selected device and the ansatz that is provided for corresponding molecule in `gnn_config.yml` file. This will generate the noisy expectation value of the final ansatz. 
 
 ### Demo Data
 We generate data in two settings: one with the ideal labels and one with the labels generated using the SREM technique. Here is a small snippet of how the data looks
@@ -71,17 +71,18 @@ We generate data in two settings: one with the ideal labels and one with the lab
 | ((1, 6), (2, 7)) | -24.59 | -24.62 | -24.61 | 0.33 | 0.6670 | 0 | 0.083 | 0.0625 | [(13, 12), (10, 12), ...] |
 
 ### Model Training and Testing
-To train and test the model, run the `graphnet_regressor.py` script. For example, to train and test the model for H4 or BH molecule, run:
+To train and test the model, run the `train.py` script. For example, to train and test the model for H4 or BH molecule, run:
 ```python
-python src/train.py --config config/gnn_config.py
+python src/train.py --config config/gnn_config.yml
 ```
-With appropriate config parameters depending on the quantum device used. The specifications of the quantum device, like gate errors, are included in the `gate_errors.py` file. Other parameters related to the geometry of the molecule and the corresponding ansatz used are in the `geometry_params.py` file. 
+With appropriate config parameters depending on the quantum device used and the geomentry selected. One needs to adjust the hyperparameter delta (beta in the code) (See Sec. 2, Eq. 8). The specifications of the quantum device, like gate errors, are included in the `gate_errors.py` file. Other parameters related to the geometry of the molecule and the corresponding ansatz used are in the `geometry_params.py` file. 
 
 ### Workflow
 To run the whole software, run the `workflow.py` script:
 ```python   
 python src/workflow.py --config config/gnn_config.py
 ```
+(PS: There are some issue with running the workflow.py directly, follow the above method while we fix this.)
 
 ## Results
 We tested our model using the noise model of two quantum devices. IBMQ Melbourne and IBMQ Guadalupe with 14 and 16 qubits, respectively, for H4 and BH molecules. The results are shown below: 
