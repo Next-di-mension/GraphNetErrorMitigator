@@ -57,6 +57,10 @@ The code is divided into two main parts:
 2. Model Training and Testing
 
 ### Data Generation
+Create the data directory:
+```
+mkdir data
+```
 To generate training data, run `training_data_generation.py` using the appropriate parameters in the configuration file depending on the molecule. For example, to generate training data for the H4 molecule, run:
 ```python
 python src/training_data_generation.py --config config/molecule.yml
